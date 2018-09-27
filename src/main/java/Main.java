@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 
 
 public class Main {
@@ -37,8 +38,8 @@ public class Main {
         frame.setBounds(100,100,800,600);
 
         JMenuBar menuBar = new JMenuBar();
-        menuBar.add(new JMenu("File"));
-        menuBar.add(new JMenu("Edit"));
+        menuBar.add(new JMenu(ResourceBundle.getBundle("strings").getString("file")));
+        menuBar.add(new JMenu(ResourceBundle.getBundle("strings").getString("edit")));
 
         frame.setJMenuBar(menuBar);
 

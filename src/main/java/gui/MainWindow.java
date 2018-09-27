@@ -4,7 +4,6 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
-import javax.swing.plaf.IconUIResource;
 import java.awt.*;
 import java.util.ResourceBundle;
 
@@ -22,12 +21,15 @@ public class MainWindow extends JFrame {
     private JPanel checkBoxesPanel;
     private JPanel mapPanel;
     private JPanel dataPanel;
+    private JLabel mapContainer;
+    private JTextField textField1;
 
 
     public MainWindow(String title) {
         super(title);
         $$$setupUI$$$();
         getContentPane().add(mainPanel);
+
     }
 
     /**
@@ -44,56 +46,101 @@ public class MainWindow extends JFrame {
         dataPanel.setLayout(new GridLayoutManager(1, 1, new Insets(10, 0, 10, 10), -1, -1));
         mainPanel.add(dataPanel, new GridConstraints(0, 1, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         tabbedPane1 = new JTabbedPane();
+        Font tabbedPane1Font = this.$$$getFont$$$(null, Font.BOLD, 14, tabbedPane1.getFont());
+        if (tabbedPane1Font != null) tabbedPane1.setFont(tabbedPane1Font);
         tabbedPane1.setTabLayoutPolicy(0);
         tabbedPane1.setTabPlacement(1);
-        dataPanel.add(tabbedPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        dataPanel.add(tabbedPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab(ResourceBundle.getBundle("strings").getString("nodes"), panel1);
         final JScrollPane scrollPane1 = new JScrollPane();
-        panel1.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel1.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab(ResourceBundle.getBundle("strings").getString("locations"), panel2);
         final JScrollPane scrollPane2 = new JScrollPane();
-        panel2.add(scrollPane2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel2.add(scrollPane2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab(ResourceBundle.getBundle("strings").getString("edges"), panel3);
         final JScrollPane scrollPane3 = new JScrollPane();
-        panel3.add(scrollPane3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel3.add(scrollPane3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         mapPanel = new JPanel();
         mapPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 10, 0, 0), -1, -1));
         mainPanel.add(mapPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JScrollPane scrollPane4 = new JScrollPane();
         mapPanel.add(scrollPane4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        mapContainer = new JLabel();
+        mapContainer.setHorizontalAlignment(0);
+        mapContainer.setIcon(new ImageIcon(getClass().getResource("/images/samplemap.png")));
+        mapContainer.setText("");
+        scrollPane4.setViewportView(mapContainer);
         addButtonsPanel = new JPanel();
         addButtonsPanel.setLayout(new GridLayoutManager(1, 3, new Insets(10, 10, 10, 0), -1, -1));
         mainPanel.add(addButtonsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         AddNode = new JButton();
+        Font AddNodeFont = this.$$$getFont$$$(null, Font.BOLD, 14, AddNode.getFont());
+        if (AddNodeFont != null) AddNode.setFont(AddNodeFont);
+        AddNode.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
         this.$$$loadButtonText$$$(AddNode, ResourceBundle.getBundle("strings").getString("node"));
         addButtonsPanel.add(AddNode, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         AddLocation = new JButton();
+        Font AddLocationFont = this.$$$getFont$$$(null, Font.BOLD, 14, AddLocation.getFont());
+        if (AddLocationFont != null) AddLocation.setFont(AddLocationFont);
+        AddLocation.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
         this.$$$loadButtonText$$$(AddLocation, ResourceBundle.getBundle("strings").getString("location"));
         addButtonsPanel.add(AddLocation, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         AddEdge = new JButton();
+        Font AddEdgeFont = this.$$$getFont$$$(null, Font.BOLD, 14, AddEdge.getFont());
+        if (AddEdgeFont != null) AddEdge.setFont(AddEdgeFont);
+        AddEdge.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
         this.$$$loadButtonText$$$(AddEdge, ResourceBundle.getBundle("strings").getString("edge"));
         addButtonsPanel.add(AddEdge, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         checkBoxesPanel = new JPanel();
         checkBoxesPanel.setLayout(new GridLayoutManager(1, 4, new Insets(0, 10, 10, 0), -1, -1));
+        Font checkBoxesPanelFont = this.$$$getFont$$$(null, -1, -1, checkBoxesPanel.getFont());
+        if (checkBoxesPanelFont != null) checkBoxesPanel.setFont(checkBoxesPanelFont);
         mainPanel.add(checkBoxesPanel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         allCheckBox = new JCheckBox();
+        Font allCheckBoxFont = this.$$$getFont$$$(null, -1, 20, allCheckBox.getFont());
+        if (allCheckBoxFont != null) allCheckBox.setFont(allCheckBoxFont);
         this.$$$loadButtonText$$$(allCheckBox, ResourceBundle.getBundle("strings").getString("all"));
         checkBoxesPanel.add(allCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         nodesCheckBox = new JCheckBox();
+        Font nodesCheckBoxFont = this.$$$getFont$$$(null, -1, 20, nodesCheckBox.getFont());
+        if (nodesCheckBoxFont != null) nodesCheckBox.setFont(nodesCheckBoxFont);
         this.$$$loadButtonText$$$(nodesCheckBox, ResourceBundle.getBundle("strings").getString("nodes"));
         checkBoxesPanel.add(nodesCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         locationCheckBox = new JCheckBox();
+        Font locationCheckBoxFont = this.$$$getFont$$$(null, -1, 20, locationCheckBox.getFont());
+        if (locationCheckBoxFont != null) locationCheckBox.setFont(locationCheckBoxFont);
         this.$$$loadButtonText$$$(locationCheckBox, ResourceBundle.getBundle("strings").getString("locations"));
         checkBoxesPanel.add(locationCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         edgesCheckBox = new JCheckBox();
+        Font edgesCheckBoxFont = this.$$$getFont$$$(null, -1, 20, edgesCheckBox.getFont());
+        if (edgesCheckBoxFont != null) edgesCheckBox.setFont(edgesCheckBoxFont);
         this.$$$loadButtonText$$$(edgesCheckBox, ResourceBundle.getBundle("strings").getString("edges"));
         checkBoxesPanel.add(edgesCheckBox, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
     }
 
     /**

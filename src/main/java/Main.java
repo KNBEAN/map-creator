@@ -35,7 +35,7 @@ public class Main {
             }
         });
 
-        frame.setBounds(100,100,800,600);
+        frame.setBounds(300,100,1000,600);
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(new JMenu(ResourceBundle.getBundle("strings").getString("file")));

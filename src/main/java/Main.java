@@ -36,6 +36,12 @@ public class Main {
 
         frame.setBounds(100,100,800,600);
 
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(new JMenu("File"));
+        menuBar.add(new JMenu("Edit"));
+
+        frame.setJMenuBar(menuBar);
+
         frame.setVisible(true);
     }
 

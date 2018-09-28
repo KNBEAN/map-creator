@@ -22,14 +22,46 @@ public class MainWindow extends JFrame {
     private JPanel mapPanel;
     private JPanel dataPanel;
     private JLabel mapContainer;
-    private JTextField textField1;
+    private JList nodesList;
+    private JList locationsList;
+    private JList edgesList;
 
+    private DefaultListModel nodesModel;
+    private DefaultListModel locationsModel;
+    private DefaultListModel edgesModel;
 
     public MainWindow(String title) {
         super(title);
         $$$setupUI$$$();
         getContentPane().add(mainPanel);
 
+        nodesList.addListSelectionListener(e -> {
+            System.out.println(nodesList.getSelectedIndex());
+        });
+    }
+
+    private void createUIComponents() {
+
+        nodesModel = new DefaultListModel();
+        locationsModel = new DefaultListModel();
+        edgesModel = new DefaultListModel();
+
+        nodesList = new JList(nodesModel);
+        nodesList.setCellRenderer(new JTextListRenderer());
+
+        locationsList = new JList(locationsModel);
+        locationsList.setCellRenderer(new JTextListRenderer());
+
+        edgesList = new JList(edgesModel);
+        edgesList.setCellRenderer(new JTextListRenderer());
+
+        //Example implementation:
+        // (Model class must have Override .toString method)
+        nodesModel.addElement(" ID: 120\n" +
+                " Floor: 0\n" +
+                " X: 240\n" +
+                " Y: 523\n" +
+                " LocationID: -1");
     }
 
     /**
@@ -40,10 +72,11 @@ public class MainWindow extends JFrame {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
+        createUIComponents();
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         dataPanel = new JPanel();
-        dataPanel.setLayout(new GridLayoutManager(1, 1, new Insets(10, 0, 10, 10), -1, -1));
+        dataPanel.setLayout(new GridLayoutManager(1, 1, new Insets(10, 0, 10, 10), -1, -1, true, false));
         mainPanel.add(dataPanel, new GridConstraints(0, 1, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         tabbedPane1 = new JTabbedPane();
         Font tabbedPane1Font = this.$$$getFont$$$(null, Font.BOLD, 14, tabbedPane1.getFont());
@@ -55,17 +88,20 @@ public class MainWindow extends JFrame {
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab(ResourceBundle.getBundle("strings").getString("nodes"), panel1);
         final JScrollPane scrollPane1 = new JScrollPane();
-        panel1.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel1.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        scrollPane1.setViewportView(nodesList);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab(ResourceBundle.getBundle("strings").getString("locations"), panel2);
         final JScrollPane scrollPane2 = new JScrollPane();
         panel2.add(scrollPane2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        scrollPane2.setViewportView(locationsList);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab(ResourceBundle.getBundle("strings").getString("edges"), panel3);
         final JScrollPane scrollPane3 = new JScrollPane();
         panel3.add(scrollPane3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        scrollPane3.setViewportView(edgesList);
         mapPanel = new JPanel();
         mapPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 10, 0, 0), -1, -1));
         mainPanel.add(mapPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));

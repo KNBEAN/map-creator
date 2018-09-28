@@ -40,6 +40,7 @@ public class Main {
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(new JMenu(ResourceBundle.getBundle("strings").getString("file")));
         menuBar.add(new JMenu(ResourceBundle.getBundle("strings").getString("edit")));
+        menuBar.add(new JMenu(ResourceBundle.getBundle("strings").getString("layers")));
 
         frame.setJMenuBar(menuBar);
 

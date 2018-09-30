@@ -9,9 +9,9 @@ import java.util.ResourceBundle;
 
 public class MainWindow extends JFrame {
     private JPanel mainPanel;
-    private JButton AddNode;
-    private JButton AddLocation;
-    private JButton AddEdge;
+    private JButton addNode;
+    private JButton addLocation;
+    private JButton addEdge;
     private JCheckBox allCheckBox;
     private JCheckBox nodesCheckBox;
     private JCheckBox locationCheckBox;
@@ -27,9 +27,9 @@ public class MainWindow extends JFrame {
     private JList edgesList;
 
     //DefaultListModel has to accept entity model objects example: DefaultListModel<NodeEntity>
-    private DefaultListModel nodesModel;
-    private DefaultListModel locationsModel;
-    private DefaultListModel edgesModel;
+    private DefaultListModel nodesListModel;
+    private DefaultListModel locationsListModel;
+    private DefaultListModel edgesListModel;
 
     public MainWindow(String title) {
         super(title);
@@ -38,30 +38,30 @@ public class MainWindow extends JFrame {
 
         nodesList.addListSelectionListener(e -> {
             /*int i = nodesList.getSelectedIndex();
-            System.out.println(nodesModel.getElementAt(i).getX());*/
+            System.out.println(nodesListModel.getElementAt(i).getX());*/
         });
     }
 
     private void createUIComponents() {
 
-        nodesModel = new DefaultListModel();
-        locationsModel = new DefaultListModel();
-        edgesModel = new DefaultListModel();
+        nodesListModel = new DefaultListModel();
+        locationsListModel = new DefaultListModel();
+        edgesListModel = new DefaultListModel();
 
-        nodesList = new JList(nodesModel);
+        nodesList = new JList(nodesListModel);
         nodesList.setCellRenderer(new JTextListRenderer());
 
-        locationsList = new JList(locationsModel);
+        locationsList = new JList(locationsListModel);
         locationsList.setCellRenderer(new JTextListRenderer());
 
-        edgesList = new JList(edgesModel);
+        edgesList = new JList(edgesListModel);
         edgesList.setCellRenderer(new JTextListRenderer());
 
         /*Example implementation:
          (Entity model class must have Override .toString method)
-        nodesModel.addElement(new NodeEntity(180,0,123,321,-1));*/
+        nodesListModel.addElement(new NodeEntity(180,0,123,321,-1));*/
 
-        nodesList.setModel(nodesModel);
+        nodesList.setModel(nodesListModel);
 
     }
 
@@ -116,24 +116,24 @@ public class MainWindow extends JFrame {
         addButtonsPanel = new JPanel();
         addButtonsPanel.setLayout(new GridLayoutManager(1, 3, new Insets(10, 10, 10, 0), -1, -1));
         mainPanel.add(addButtonsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        AddNode = new JButton();
-        Font AddNodeFont = this.$$$getFont$$$(null, Font.BOLD, 14, AddNode.getFont());
-        if (AddNodeFont != null) AddNode.setFont(AddNodeFont);
-        AddNode.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
-        this.$$$loadButtonText$$$(AddNode, ResourceBundle.getBundle("strings").getString("node"));
-        addButtonsPanel.add(AddNode, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        AddLocation = new JButton();
-        Font AddLocationFont = this.$$$getFont$$$(null, Font.BOLD, 14, AddLocation.getFont());
-        if (AddLocationFont != null) AddLocation.setFont(AddLocationFont);
-        AddLocation.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
-        this.$$$loadButtonText$$$(AddLocation, ResourceBundle.getBundle("strings").getString("location"));
-        addButtonsPanel.add(AddLocation, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        AddEdge = new JButton();
-        Font AddEdgeFont = this.$$$getFont$$$(null, Font.BOLD, 14, AddEdge.getFont());
-        if (AddEdgeFont != null) AddEdge.setFont(AddEdgeFont);
-        AddEdge.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
-        this.$$$loadButtonText$$$(AddEdge, ResourceBundle.getBundle("strings").getString("edge"));
-        addButtonsPanel.add(AddEdge, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addNode = new JButton();
+        Font AddNodeFont = this.$$$getFont$$$(null, Font.BOLD, 14, addNode.getFont());
+        if (AddNodeFont != null) addNode.setFont(AddNodeFont);
+        addNode.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
+        this.$$$loadButtonText$$$(addNode, ResourceBundle.getBundle("strings").getString("node"));
+        addButtonsPanel.add(addNode, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addLocation = new JButton();
+        Font AddLocationFont = this.$$$getFont$$$(null, Font.BOLD, 14, addLocation.getFont());
+        if (AddLocationFont != null) addLocation.setFont(AddLocationFont);
+        addLocation.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
+        this.$$$loadButtonText$$$(addLocation, ResourceBundle.getBundle("strings").getString("location"));
+        addButtonsPanel.add(addLocation, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addEdge = new JButton();
+        Font AddEdgeFont = this.$$$getFont$$$(null, Font.BOLD, 14, addEdge.getFont());
+        if (AddEdgeFont != null) addEdge.setFont(AddEdgeFont);
+        addEdge.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
+        this.$$$loadButtonText$$$(addEdge, ResourceBundle.getBundle("strings").getString("edge"));
+        addButtonsPanel.add(addEdge, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         checkBoxesPanel = new JPanel();
         checkBoxesPanel.setLayout(new GridLayoutManager(1, 4, new Insets(0, 10, 10, 0), -1, -1));
         Font checkBoxesPanelFont = this.$$$getFont$$$(null, -1, -1, checkBoxesPanel.getFont());

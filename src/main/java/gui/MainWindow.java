@@ -26,6 +26,7 @@ public class MainWindow extends JFrame {
     private JList locationsList;
     private JList edgesList;
 
+    //DefaultListModel has to accept entity model objects example: DefaultListModel<NodeEntity>
     private DefaultListModel nodesModel;
     private DefaultListModel locationsModel;
     private DefaultListModel edgesModel;
@@ -36,7 +37,8 @@ public class MainWindow extends JFrame {
         getContentPane().add(mainPanel);
 
         nodesList.addListSelectionListener(e -> {
-            System.out.println(nodesList.getSelectedIndex());
+            /*int i = nodesList.getSelectedIndex();
+            System.out.println(nodesModel.getElementAt(i).getX());*/
         });
     }
 
@@ -55,13 +57,12 @@ public class MainWindow extends JFrame {
         edgesList = new JList(edgesModel);
         edgesList.setCellRenderer(new JTextListRenderer());
 
-        //Example implementation:
-        // (Model class must have Override .toString method)
-        nodesModel.addElement(" ID: 120\n" +
-                " Floor: 0\n" +
-                " X: 240\n" +
-                " Y: 523\n" +
-                " LocationID: -1");
+        /*Example implementation:
+         (Entity model class must have Override .toString method)
+        nodesModel.addElement(new NodeEntity(180,0,123,321,-1));*/
+
+        nodesList.setModel(nodesModel);
+
     }
 
     /**
@@ -77,7 +78,7 @@ public class MainWindow extends JFrame {
         mainPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         dataPanel = new JPanel();
         dataPanel.setLayout(new GridLayoutManager(1, 1, new Insets(10, 0, 10, 10), -1, -1, true, false));
-        mainPanel.add(dataPanel, new GridConstraints(0, 1, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        mainPanel.add(dataPanel, new GridConstraints(0, 1, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         tabbedPane1 = new JTabbedPane();
         Font tabbedPane1Font = this.$$$getFont$$$(null, Font.BOLD, 14, tabbedPane1.getFont());
         if (tabbedPane1Font != null) tabbedPane1.setFont(tabbedPane1Font);

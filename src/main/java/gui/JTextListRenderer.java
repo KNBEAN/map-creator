@@ -15,13 +15,19 @@ public class JTextListRenderer extends JTextArea implements ListCellRenderer {
 
         setText(value.toString());
 
+        Color background = null;
+        Color foreground = null;
+
         if (isSelected){
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
+            background = list.getSelectionBackground();
+            foreground = list.getSelectionForeground();
         }else{
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
+            background = list.getBackground();
+            foreground = list.getForeground();
         }
+
+        setBackground(background);
+        setForeground(foreground);
 
         setEnabled(true);
         setFont(list.getFont().deriveFont(14.0f));

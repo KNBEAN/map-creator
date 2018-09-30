@@ -1,9 +1,11 @@
 import gui.MainWindow;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 
@@ -38,9 +40,17 @@ public class Main {
         frame.setBounds(300,100,1000,600);
 
         JMenuBar menuBar = new JMenuBar();
-        menuBar.add(new JMenu(ResourceBundle.getBundle("strings").getString("file")));
-        menuBar.add(new JMenu(ResourceBundle.getBundle("strings").getString("edit")));
-        menuBar.add(new JMenu(ResourceBundle.getBundle("strings").getString("layers")));
+
+        JMenu fileMenu = new JMenu(ResourceBundle.getBundle("strings").getString("file"));
+        JMenuItem openItem = new JMenuItem(ResourceBundle.getBundle("strings").getString("open"));
+        fileMenu.add(openItem);
+
+        JMenu editMenu = new JMenu(ResourceBundle.getBundle("strings").getString("edit"));
+        JMenu layersMenu = new JMenu(ResourceBundle.getBundle("strings").getString("layers"));
+
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        menuBar.add(layersMenu);
 
         frame.setJMenuBar(menuBar);
 

@@ -5,6 +5,8 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 public class MainWindow extends JFrame {
@@ -26,6 +28,7 @@ public class MainWindow extends JFrame {
     private JList locationsList;
     private JList edgesList;
 
+    private AddFloorWindow addFloorWindow;
     //DefaultListModel has to accept entity model objects example: DefaultListModel<NodeEntity>
     private DefaultListModel nodesListModel;
     private DefaultListModel locationsListModel;
@@ -34,12 +37,14 @@ public class MainWindow extends JFrame {
     public MainWindow(String title) {
         super(title);
         $$$setupUI$$$();
+        addMenuBar();
         getContentPane().add(mainPanel);
 
         nodesList.addListSelectionListener(e -> {
             /*int i = nodesList.getSelectedIndex();
             System.out.println(nodesListModel.getElementAt(i).getX());*/
         });
+
     }
 
     private void createUIComponents() {
@@ -62,7 +67,35 @@ public class MainWindow extends JFrame {
         nodesListModel.addElement(new NodeEntity(180,0,123,321,-1));*/
 
         nodesList.setModel(nodesListModel);
+        locationsList.setModel(locationsListModel);
+        edgesList.setModel(edgesListModel);
 
+    }
+
+    private void addMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu(ResourceBundle.getBundle("strings").getString("file"));
+        JMenuItem openItem = new JMenuItem(ResourceBundle.getBundle("strings").getString("open"));
+        fileMenu.add(openItem);
+
+        JMenu editMenu = new JMenu(ResourceBundle.getBundle("strings").getString("edit"));
+        JMenu layersMenu = new JMenu(ResourceBundle.getBundle("strings").getString("layers"));
+        JMenuItem showFloors = new JMenuItem(ResourceBundle.getBundle("strings").getString("add_floor"));
+        showFloors.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addFloorWindow = new AddFloorWindow("Floor Manager");
+                addFloorWindow.setVisible(true);
+            }
+        });
+        layersMenu.add(showFloors);
+
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        menuBar.add(layersMenu);
+
+        setJMenuBar(menuBar);
     }
 
     /**
@@ -117,20 +150,20 @@ public class MainWindow extends JFrame {
         addButtonsPanel.setLayout(new GridLayoutManager(1, 3, new Insets(10, 10, 10, 0), -1, -1));
         mainPanel.add(addButtonsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         addNode = new JButton();
-        Font AddNodeFont = this.$$$getFont$$$(null, Font.BOLD, 14, addNode.getFont());
-        if (AddNodeFont != null) addNode.setFont(AddNodeFont);
+        Font addNodeFont = this.$$$getFont$$$(null, Font.BOLD, 14, addNode.getFont());
+        if (addNodeFont != null) addNode.setFont(addNodeFont);
         addNode.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
         this.$$$loadButtonText$$$(addNode, ResourceBundle.getBundle("strings").getString("node"));
         addButtonsPanel.add(addNode, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         addLocation = new JButton();
-        Font AddLocationFont = this.$$$getFont$$$(null, Font.BOLD, 14, addLocation.getFont());
-        if (AddLocationFont != null) addLocation.setFont(AddLocationFont);
+        Font addLocationFont = this.$$$getFont$$$(null, Font.BOLD, 14, addLocation.getFont());
+        if (addLocationFont != null) addLocation.setFont(addLocationFont);
         addLocation.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
         this.$$$loadButtonText$$$(addLocation, ResourceBundle.getBundle("strings").getString("location"));
         addButtonsPanel.add(addLocation, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         addEdge = new JButton();
-        Font AddEdgeFont = this.$$$getFont$$$(null, Font.BOLD, 14, addEdge.getFont());
-        if (AddEdgeFont != null) addEdge.setFont(AddEdgeFont);
+        Font addEdgeFont = this.$$$getFont$$$(null, Font.BOLD, 14, addEdge.getFont());
+        if (addEdgeFont != null) addEdge.setFont(addEdgeFont);
         addEdge.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
         this.$$$loadButtonText$$$(addEdge, ResourceBundle.getBundle("strings").getString("edge"));
         addButtonsPanel.add(addEdge, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

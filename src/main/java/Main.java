@@ -38,22 +38,6 @@ public class Main {
         });
 
         frame.setBounds(300,100,1000,600);
-
-        JMenuBar menuBar = new JMenuBar();
-
-        JMenu fileMenu = new JMenu(ResourceBundle.getBundle("strings").getString("file"));
-        JMenuItem openItem = new JMenuItem(ResourceBundle.getBundle("strings").getString("open"));
-        fileMenu.add(openItem);
-
-        JMenu editMenu = new JMenu(ResourceBundle.getBundle("strings").getString("edit"));
-        JMenu layersMenu = new JMenu(ResourceBundle.getBundle("strings").getString("layers"));
-
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-        menuBar.add(layersMenu);
-
-        frame.setJMenuBar(menuBar);
-
         frame.setVisible(true);
     }
 

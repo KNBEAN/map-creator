@@ -64,11 +64,9 @@ public class MainWindow extends JFrame {
 
         /*Example implementation:
          (Entity model class must have Override .toString method)
-        nodesListModel.addElement(new NodeEntity(180,0,123,321,-1));*/
-
+        nodesListModel.addElement(new NodeEntity(180,0,123,321,-1));
         nodesList.setModel(nodesListModel);
-        locationsList.setModel(locationsListModel);
-        edgesList.setModel(edgesListModel);
+        */
 
     }
 
@@ -81,11 +79,11 @@ public class MainWindow extends JFrame {
 
         JMenu editMenu = new JMenu(ResourceBundle.getBundle("strings").getString("edit"));
         JMenu layersMenu = new JMenu(ResourceBundle.getBundle("strings").getString("layers"));
-        JMenuItem showFloors = new JMenuItem(ResourceBundle.getBundle("strings").getString("add_floor"));
+        JMenuItem showFloors = new JMenuItem(ResourceBundle.getBundle("strings").getString("show_floors"));
         showFloors.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addFloorWindow = new AddFloorWindow("Floor Manager");
+                addFloorWindow = new AddFloorWindow(ResourceBundle.getBundle("strings").getString("floors_manager"));
                 addFloorWindow.setVisible(true);
             }
         });

@@ -18,7 +18,7 @@ public interface Edge {
      * ID of edge in base
      * @return
      */
-    int getID();
+    int getId();
 
     /**
      * ID of start point of edge

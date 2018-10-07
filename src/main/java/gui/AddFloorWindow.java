@@ -27,6 +27,7 @@ public class AddFloorWindow extends JDialog {
     private JFileChooser imageChooser;
     private String imagePath;
     private DefaultListModel<FloorWithImage> floorsListModel;
+    private int floorsListSelectedIndex = -1;
 
     public AddFloorWindow(String title) {
         setTitle(title);
@@ -37,14 +38,14 @@ public class AddFloorWindow extends JDialog {
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
 
-        setSize(500, 320);
+        setSize(500, 350);
         setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
 
 
         addImageButton.addActionListener(e -> {
 
-            int containerHeight = 128;
-            int containerWidth = 128;
+            int imageContainerHeight = floorImageContainer.getHeight();
+            int imageContainerWidth = floorImageContainer.getWidth();
 
             imageChooser = new JFileChooser();
             imageChooser.setFileFilter(new FileNameExtensionFilter
@@ -60,8 +61,10 @@ public class AddFloorWindow extends JDialog {
                 System.out.println("Image Height: " + imageIcon.getIconHeight() + "\n" +
                         "Image Width: " + imageIcon.getIconWidth());
 
-                if (imageIcon.getIconHeight() > containerHeight && imageIcon.getIconWidth() > containerWidth)
-                    floorImageContainer.setIcon(resizeImageIcon(imageIcon, containerHeight, containerWidth));
+                if (imageIcon.getIconHeight() > imageContainerHeight && imageIcon.getIconWidth() > imageContainerWidth)
+                    floorImageContainer.setIcon(resizeImageIcon(imageIcon,
+                            floorImageContainer.getHeight(),
+                            floorImageContainer.getWidth()));
                 else
                     floorImageContainer.setIcon(imageIcon);
 
@@ -91,7 +94,7 @@ public class AddFloorWindow extends JDialog {
 
                 try {
                     floorNumber = Integer.parseInt(floorFieldText);
-                    System.out.println(floorNumber);
+                    System.out.println("Floor: " + floorNumber);
                 } catch (NumberFormatException ex) {
 
                     JOptionPane.showMessageDialog(getParent(),
@@ -104,9 +107,76 @@ public class AddFloorWindow extends JDialog {
             }
 
         });
+
+        floorsList.addListSelectionListener(e -> {
+            floorsListSelectedIndex = floorsList.getSelectedIndex();
+
+            if (floorsListSelectedIndex == -1) {
+                if (!floorsListModel.isEmpty()) {
+                    floorsListSelectedIndex++;
+                }
+            }
+            if (floorsListSelectedIndex > -1) {
+                FloorWithImage selectedElement = floorsListModel.elementAt(floorsListSelectedIndex);
+                floorField.setText(String.valueOf(selectedElement.getFloors()));
+                floorTagField.setText(selectedElement.floorName(floorsListSelectedIndex));
+                floorImageContainer.setIcon(resizeImageIcon(selectedElement.getImage(),
+                        floorImageContainer.getWidth(),
+                        floorImageContainer.getHeight()));
+                imagePath = selectedElement.getPath();
+                imageName.setText(selectedElement.getImageName());
+            }
+
+        });
+
+        removeFloorButton.addActionListener(e -> {
+
+            if (floorsListSelectedIndex == -1) {
+                int searchSelection = JOptionPane.showConfirmDialog(getParent(),
+                        "Search floor by number?\n" +
+                                "Ok - Search by number\n" +
+                                "Cancel - Choose item from list and click remove button",
+                        "Option",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                // TODO: Add search by number window!
+            } else {
+                int removeSelection = JOptionPane.showConfirmDialog(getParent(),
+                        "Delete " +
+                                floorsListModel.getElementAt(floorsListSelectedIndex).floorName(floorsListSelectedIndex) +
+                                "?",
+                        "Confirm",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if (removeSelection == JOptionPane.OK_OPTION)
+                    floorsListModel.removeElementAt(floorsListSelectedIndex);
+            }
+
+        });
+
+        changeFloorButton.addActionListener(e -> {
+            if (floorsListSelectedIndex == -1) {
+                int selection = JOptionPane.showConfirmDialog(getParent(),
+                        "Search floor by number?\n" +
+                                "Ok - Search by number\n" +
+                                "Cancel - Choose item from list and click change button",
+                        "Option",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                // TODO: Add search by number window!
+            } else {
+
+                floorsListModel.setElementAt(new FloorWithImage(
+                                Integer.parseInt(floorField.getText()),
+                                floorTagField.getText(),
+                                imagePath),
+                        floorsListSelectedIndex);
+            }
+
+        });
     }
 
-    public static ImageIcon resizeImageIcon(ImageIcon imageIcon, int width, int height) {
+    private static ImageIcon resizeImageIcon(ImageIcon imageIcon, int width, int height) {
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
 
         Graphics2D graphics2D = bufferedImage.createGraphics();

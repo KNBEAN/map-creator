@@ -17,4 +17,6 @@ public class Location_Tag implements database.model.Location_Tag {
     public int getLocationId() {
         return locationId;
     }
+
+
 }

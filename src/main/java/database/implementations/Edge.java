@@ -9,7 +9,6 @@ public class Edge implements database.model.Edge {
     private int to_id;
     private int length;
 
-
     public Edge (Node from_Node,Node to_Node){
         id = Id_Generator.getId();
         this.from_id = from_Node.getID();
@@ -50,10 +49,8 @@ public class Edge implements database.model.Edge {
         return length;
     }
 
-    public void swapEnds(){
-        int from_id_copy = from_id;
-        from_id = to_id;
-        to_id = from_id_copy;
+    public Edge swapEnds(){
+        return new Edge(this.to_id,this.from_id,length);
     }
 
     @Override
@@ -66,4 +63,5 @@ public class Edge implements database.model.Edge {
                 && objectEdge.length == length) return true;
         return false;
     }
-    }
+
+}

@@ -2,7 +2,7 @@ package database.implementations;
 
 import database.Id_Generator;
 
-public class Node implements database.model.Node {
+public class Node implements database.model.Node{
 
     private int ID;
     private int floor;
@@ -61,6 +61,5 @@ public class Node implements database.model.Node {
                 && objectNode.getLocationID() == locationId) return true;
         return false;
     }
-
 
 }

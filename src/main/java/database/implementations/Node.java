@@ -51,10 +51,8 @@ public class Node implements database.model.Node{
 
     @Override
     public boolean equals(Object obj) {
-        Node objectNode = null;
-        if (obj.getClass() == Node.class){
-            objectNode = (Node) obj;
-        }
+        if (obj.getClass() != Node.class) return false;
+        Node  objectNode = (Node) obj;
         if (objectNode.getX() == x
                 && objectNode.getFloor() == floor
                 && objectNode.getY() == y

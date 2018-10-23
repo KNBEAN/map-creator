@@ -20,4 +20,6 @@ public class Floor implements database.model.Floor {
     public String floorName(int floor) {
         return floorName;
     }
+
+
 }

@@ -33,4 +33,6 @@ public class Location implements database.model.Location {
     public String getDescription() {
         return description;
     }
+
+
 }

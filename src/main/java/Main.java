@@ -1,12 +1,9 @@
 import gui.MainWindow;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.util.ResourceBundle;
 
 
 public class Main {

@@ -40,8 +40,6 @@ public class MainWindow extends JFrame {
     private LocationArray locationCollection = new LocationArray();
     private Location_TagArray locationTagCollection = new Location_TagArray();
 
-
-    //DefaultListModel has to accept entity model objects example: DefaultListModel<NodeEntity>
     private DefaultListModel<Node> nodesListModel;
     private DefaultListModel<Location> locationsListModel;
     private DefaultListModel<Edge> edgesListModel;
@@ -109,11 +107,11 @@ public class MainWindow extends JFrame {
 
     private void loadJsonsFromFolder(String folderPath) {
 
-        String edgePath = folderPath + "\\edgeList.json";
-        String nodePath = folderPath + "\\nodeList.json";
-        String floorPath = folderPath + "\\floorList.json";
-        String locationPath = folderPath + "\\locationList.json";
-        String tagPath = folderPath + "\\tagList.json";
+        String edgePath = folderPath + ResourceBundle.getBundle("strings").getString("json_edge");
+        String nodePath = folderPath + ResourceBundle.getBundle("strings").getString("json_node");
+        String floorPath = folderPath + ResourceBundle.getBundle("strings").getString("json_floor");
+        String locationPath = folderPath + ResourceBundle.getBundle("strings").getString("json_location");
+        String tagPath = folderPath + ResourceBundle.getBundle("strings").getString("json_tag");
 
         try {
             ArrayList<Edge> edges = JsonParser.getEntityArrayList(edgePath, new TypeToken<List<Edge>>() {
@@ -136,28 +134,16 @@ public class MainWindow extends JFrame {
             }.getType());
             locationTagCollection = (Location_TagArray) addArrayToCollection(location_tags, locationTagCollection);
 
+            JOptionPane.showMessageDialog(getParent(), ResourceBundle.getBundle("strings").getString("json_success"));
+
         } catch (FileNotFoundException e) {
 
             JOptionPane.showMessageDialog(getParent(),
-                    "These folder hasn't got files from database or some files are missed.\n" +
-                            "Load all files or check typo",
+                    ResourceBundle.getBundle("strings").getString("json_error"),
                     ResourceBundle.getBundle("strings").getString("error"),
                     JOptionPane.ERROR_MESSAGE);
         }
 
-        JOptionPane.showMessageDialog(getParent(), "Jsons successfully loaded!");
-
-
-
-        /*ArrayList<Floor> kek = floorCollection.getArrayList();
-
-        int i = 0;
-        for (Floor ed : floors) {
-            System.out.println(ed.getFloors());
-            i++;
-        }
-
-        System.out.println("Ilosc pięter: " + i);*/
     }
 
     private <T> HashSet<?> addArrayToCollection(ArrayList<T> entityArrayList, HashSet<Object> entityCollection) {
@@ -167,7 +153,6 @@ public class MainWindow extends JFrame {
 
         return entityCollection;
     }
-
 
     private void createUIComponents() {
 
@@ -183,10 +168,6 @@ public class MainWindow extends JFrame {
 
         edgesList = new JList(edgesListModel);
         edgesList.setCellRenderer(new JTextListRenderer());
-
-        /*Example implementation:
-         (Entity model class must have Override .toString method)
-        nodesListModel.addElement(new NodeEntity(180,0,123,321,-1));*/
 
         nodesList.setModel(nodesListModel);
 

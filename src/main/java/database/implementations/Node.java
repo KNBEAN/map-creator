@@ -4,29 +4,29 @@ import database.Id_Generator;
 
 public class Node implements database.model.Node{
 
-    private int ID;
+    private int id;
     private int floor;
     private int x;
     private int y;
-    private int locationId;
+    private int locationID;
 
     public Node (int x,int y,int floor,int locationId){
-        ID = Id_Generator.getId();
+        id = Id_Generator.getId();
         this.x = x;
         this.y = y;
         this.floor = floor;
-        this.locationId = locationId;
+        this.locationID = locationId;
     }
     public Node (int x,int y,int floor){
-        ID = Id_Generator.getId();
+        id = Id_Generator.getId();
         this.x = x;
         this.y = y;
         this.floor = floor;
     }
 
     @Override
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class Node implements database.model.Node{
 
     @Override
     public int getLocationID() {
-        return locationId;
+        return locationID;
     }
 
     @Override
@@ -56,8 +56,16 @@ public class Node implements database.model.Node{
         if (objectNode.getX() == x
                 && objectNode.getFloor() == floor
                 && objectNode.getY() == y
-                && objectNode.getLocationID() == locationId) return true;
+                && objectNode.getLocationID() == locationID) return true;
         return false;
     }
 
+    @Override
+    public String toString() {
+        return " ID: " + id + "\n" +
+                " Floor: "+ floor + "\n" +
+                " X: " + x + "\n" +
+                " Y: " + y + "\n" +
+                " Location ID: "+ locationID;
+    }
 }

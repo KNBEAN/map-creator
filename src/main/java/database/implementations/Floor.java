@@ -3,17 +3,17 @@ package database.implementations;
 
 
 public class Floor implements database.model.Floor {
-    private int floor;
+    private int floorNumber;
     private String floorName;
 
     public Floor(int floor,String floorName){
-        this.floor = floor;
+        this.floorNumber = floor;
         this.floorName = floorName;
     }
 
     @Override
     public int getFloors() {
-        return floor;
+        return floorNumber;
     }
 
     @Override

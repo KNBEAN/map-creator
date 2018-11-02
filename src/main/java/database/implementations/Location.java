@@ -34,5 +34,10 @@ public class Location implements database.model.Location {
         return description;
     }
 
-
+    @Override
+    public String toString() {
+        return " ID: " + id + "\n" +
+                " Name: " + name + "\n" +
+                " Description: " + description;
+    }
 }

@@ -1,10 +1,18 @@
 package gui;
 
+import com.google.gson.reflect.TypeToken;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import database.JsonParser;
+import database.collections.*;
+import database.implementations.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainWindow extends JFrame {
@@ -26,13 +34,19 @@ public class MainWindow extends JFrame {
     private JList locationsList;
     private JList edgesList;
 
-    //DefaultListModel has to accept entity model objects example: DefaultListModel<NodeEntity>
-    private DefaultListModel nodesListModel;
-    private DefaultListModel locationsListModel;
-    private DefaultListModel edgesListModel;
+    private EdgeArray edgeCollection = new EdgeArray();
+    private NodeArray nodeCollection = new NodeArray();
+    private FloorArray floorCollection = new FloorArray();
+    private LocationArray locationCollection = new LocationArray();
+    private Location_TagArray locationTagCollection = new Location_TagArray();
+
+    private DefaultListModel<Node> nodesListModel;
+    private DefaultListModel<Location> locationsListModel;
+    private DefaultListModel<Edge> edgesListModel;
 
     public MainWindow(String title) {
         super(title);
+        addMenuBar();
         $$$setupUI$$$();
         getContentPane().add(mainPanel);
 
@@ -40,6 +54,104 @@ public class MainWindow extends JFrame {
             /*int i = nodesList.getSelectedIndex();
             System.out.println(nodesListModel.getElementAt(i).getX());*/
         });
+    }
+
+    private void addMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu(ResourceBundle.getBundle("strings").getString("file"));
+        JMenuItem openItem = new JMenuItem(ResourceBundle.getBundle("strings").getString("open"));
+        openItem.addActionListener(e -> {
+
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int result = chooser.showOpenDialog(getParent());
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                String folderPath = chooser.getSelectedFile().getPath();
+
+                loadJsonsFromFolder(folderPath);
+                loadCollectionsToListModel();
+
+            } else
+                System.out.println("Open command cancelled by user");
+
+        });
+        fileMenu.add(openItem);
+
+        JMenu editMenu = new JMenu(ResourceBundle.getBundle("strings").getString("edit"));
+        JMenu layersMenu = new JMenu(ResourceBundle.getBundle("strings").getString("layers"));
+
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        menuBar.add(layersMenu);
+
+        setJMenuBar(menuBar);
+    }
+
+    private void loadCollectionsToListModel() {
+
+        for (int i = 0; i < nodeCollection.getArrayList().size(); i++) {
+            nodesListModel.add(i, nodeCollection.getArrayList().get(i));
+        }
+
+        for (int i = 0; i < edgeCollection.getArrayList().size(); i++) {
+            edgesListModel.add(i, edgeCollection.getArrayList().get(i));
+        }
+
+        for (int i = 0; i < locationCollection.getArrayList().size(); i++) {
+            locationsListModel.add(i, locationCollection.getArrayList().get(i));
+        }
+
+    }
+
+    private void loadJsonsFromFolder(String folderPath) {
+
+        String edgePath = folderPath + ResourceBundle.getBundle("strings").getString("json_edge");
+        String nodePath = folderPath + ResourceBundle.getBundle("strings").getString("json_node");
+        String floorPath = folderPath + ResourceBundle.getBundle("strings").getString("json_floor");
+        String locationPath = folderPath + ResourceBundle.getBundle("strings").getString("json_location");
+        String tagPath = folderPath + ResourceBundle.getBundle("strings").getString("json_tag");
+
+        try {
+            ArrayList<Edge> edges = JsonParser.getEntityArrayList(edgePath, new TypeToken<List<Edge>>() {
+            }.getType());
+            edgeCollection = (EdgeArray) addArrayToCollection(edges, edgeCollection);
+
+            ArrayList<Node> nodes = JsonParser.getEntityArrayList(nodePath, new TypeToken<List<Node>>() {
+            }.getType());
+            nodeCollection = (NodeArray) addArrayToCollection(nodes, nodeCollection);
+
+            ArrayList<Floor> floors = JsonParser.getEntityArrayList(floorPath, new TypeToken<List<Floor>>() {
+            }.getType());
+            floorCollection = (FloorArray) addArrayToCollection(floors, floorCollection);
+
+            ArrayList<Location> locations = JsonParser.getEntityArrayList(locationPath, new TypeToken<List<Location>>() {
+            }.getType());
+            locationCollection = (LocationArray) addArrayToCollection(locations, locationCollection);
+
+            ArrayList<Location_Tag> location_tags = JsonParser.getEntityArrayList(tagPath, new TypeToken<List<Location_Tag>>() {
+            }.getType());
+            locationTagCollection = (Location_TagArray) addArrayToCollection(location_tags, locationTagCollection);
+
+            JOptionPane.showMessageDialog(getParent(), ResourceBundle.getBundle("strings").getString("json_success"));
+
+        } catch (FileNotFoundException e) {
+
+            JOptionPane.showMessageDialog(getParent(),
+                    ResourceBundle.getBundle("strings").getString("json_error"),
+                    ResourceBundle.getBundle("strings").getString("error"),
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
+
+    private <T> HashSet<?> addArrayToCollection(ArrayList<T> entityArrayList, HashSet<Object> entityCollection) {
+
+        for (T obj : entityArrayList)
+            entityCollection.add(obj);
+
+        return entityCollection;
     }
 
     private void createUIComponents() {
@@ -56,10 +168,6 @@ public class MainWindow extends JFrame {
 
         edgesList = new JList(edgesListModel);
         edgesList.setCellRenderer(new JTextListRenderer());
-
-        /*Example implementation:
-         (Entity model class must have Override .toString method)
-        nodesListModel.addElement(new NodeEntity(180,0,123,321,-1));*/
 
         nodesList.setModel(nodesListModel);
 

@@ -31,4 +31,8 @@ public class LocationArray extends HashSet {
         }
         return false;
     }
+
+    public ArrayList<Location> getArrayList() {
+        return new ArrayList<Location> (this);
+    }
 }

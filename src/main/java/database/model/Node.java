@@ -5,7 +5,7 @@ public interface Node {
      * Returns unique ID of point of the map
      * @return ID
      */
-    int getID();
+    int getId();
 
     /**
      * Returns floor number. Number of floors is count from 0. It has to be non negative value.

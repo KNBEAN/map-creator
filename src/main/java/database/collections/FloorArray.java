@@ -31,4 +31,8 @@ public class FloorArray extends HashSet {
         }
         return false;
     }
+
+    public ArrayList<Floor> getArrayList() {
+        return new ArrayList<Floor> (this);
+    }
 }

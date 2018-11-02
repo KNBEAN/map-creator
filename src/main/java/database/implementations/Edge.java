@@ -11,8 +11,8 @@ public class Edge implements database.model.Edge {
 
     public Edge (Node from_Node,Node to_Node){
         id = Id_Generator.getId();
-        this.from_id = from_Node.getID();
-        this.to_id = to_Node.getID();
+        this.from_id = from_Node.getId();
+        this.to_id = to_Node.getId();
         this.length = calculateLength(from_Node,to_Node);
     }
 
@@ -64,4 +64,11 @@ public class Edge implements database.model.Edge {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return " ID: " + id + "\n" +
+                " From ID: " + from_id + "\n" +
+                " To ID: "+ to_id + "\n" +
+                " Length: " + length;
+    }
 }

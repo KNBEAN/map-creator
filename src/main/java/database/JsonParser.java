@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class JsonParser {
 
-    public <T> ArrayList<T> getEntityArrayList(String jsonPath, Type type) {
+    public static <T> ArrayList<T> getEntityArrayList(String jsonPath, Type type) throws FileNotFoundException {
         
         ArrayList<T> arrayList = null;
 
@@ -17,7 +17,8 @@ public class JsonParser {
             Reader reader = new InputStreamReader(inputStream);
             arrayList = gson.fromJson(reader, type);
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            throw new FileNotFoundException("File not found");
         }
 
         return arrayList;

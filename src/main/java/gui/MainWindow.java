@@ -8,11 +8,7 @@ import database.collections.*;
 import database.implementations.*;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -70,6 +66,7 @@ public class MainWindow extends JFrame {
             ImageIcon icon = ((PaintPanel) paintPanel).getImageIcon();
             ((PaintPanel) paintPanel).resizeImage(icon, slider.getValue());
             paintPanel.repaint();
+            paintPanel.revalidate();
         });
 
         plusButton.addActionListener(e -> {
@@ -250,6 +247,8 @@ public class MainWindow extends JFrame {
         mapPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 10, 0, 0), -1, -1));
         mainPanel.add(mapPanel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(800, -1), new Dimension(800, -1), null, 0, false));
         scrollMap = new JScrollPane();
+        scrollMap.setHorizontalScrollBarPolicy(32);
+        scrollMap.setVerticalScrollBarPolicy(22);
         mapPanel.add(scrollMap, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         scrollMap.setViewportView(paintPanel);
         addButtonsPanel = new JPanel();
@@ -304,8 +303,13 @@ public class MainWindow extends JFrame {
         slider = new JSlider();
         slider.setMaximum(250);
         slider.setMinimum(40);
+        slider.setMinorTickSpacing(0);
         slider.setPaintLabels(true);
+        slider.setPaintTicks(false);
+        slider.setPaintTrack(true);
+        slider.setSnapToTicks(false);
         slider.setValue(100);
+        slider.setValueIsAdjusting(false);
         scalePanel.add(slider, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         sliderValue = new JLabel();
         Font sliderValueFont = this.$$$getFont$$$(null, Font.BOLD, 14, sliderValue.getFont());

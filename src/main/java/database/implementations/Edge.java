@@ -5,21 +5,21 @@ import database.Id_Generator;
 public class Edge implements database.model.Edge {
 
     private int id;
-    private int from_id;
-    private int to_id;
+    private int from;
+    private int to;
     private int length;
 
     public Edge (Node from_Node,Node to_Node){
         id = Id_Generator.getId();
-        this.from_id = from_Node.getId();
-        this.to_id = to_Node.getId();
+        this.from = from_Node.getId();
+        this.to = to_Node.getId();
         this.length = calculateLength(from_Node,to_Node);
     }
 
     public Edge (int from_id,int to_id,int length){
         id = Id_Generator.getId();
-        this.from_id = from_id;
-        this.to_id = to_id;
+        this.from = from_id;
+        this.to = to_id;
         this.length = length;
     }
 
@@ -36,12 +36,12 @@ public class Edge implements database.model.Edge {
 
     @Override
     public int getFrom() {
-        return from_id;
+        return from;
     }
 
     @Override
     public int getTo() {
-        return to_id;
+        return to;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Edge implements database.model.Edge {
     }
 
     public Edge swapEnds(){
-        return new Edge(this.to_id,this.from_id,length);
+        return new Edge(this.to,this.from,length);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Edge implements database.model.Edge {
         if (obj.getClass() == Edge.class){
             objectEdge = (Edge) obj;
         }
-        if (objectEdge.getTo() == to_id && objectEdge.getFrom() == from_id
+        if (objectEdge.getTo() == to && objectEdge.getFrom() == from
                 && objectEdge.length == length) return true;
         return false;
     }
@@ -67,8 +67,8 @@ public class Edge implements database.model.Edge {
     @Override
     public String toString() {
         return " ID: " + id + "\n" +
-                " From ID: " + from_id + "\n" +
-                " To ID: "+ to_id + "\n" +
+                " From ID: " + from + "\n" +
+                " To ID: "+ to + "\n" +
                 " Length: " + length;
     }
 }

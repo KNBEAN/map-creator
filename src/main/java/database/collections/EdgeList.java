@@ -1,6 +1,7 @@
 package database.collections;
 
-import database.implementations.Edge;
+
+import database.model.Edge;
 
 import java.util.ArrayList;
 

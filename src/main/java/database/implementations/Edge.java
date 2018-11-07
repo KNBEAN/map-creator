@@ -49,6 +49,7 @@ public class Edge implements database.model.Edge {
         return length;
     }
 
+    @Override
     public Edge swapEnds(){
         return new Edge(this.to,this.from,length);
     }

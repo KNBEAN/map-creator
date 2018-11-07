@@ -31,10 +31,17 @@ class FloorListTest {
 
     @Test
     void testUpdate() {
+        testAdd();
+        Floor three = new Floor(1,"parter");
+        floorList.update(one,three);
+        assertTrue (floorList.get(three.getFloors())==three);
     }
 
     @Test
     void testRemove() {
+        testAdd();
+        floorList.remove(one);
+        assertNull(floorList.get(one.getFloors()));
     }
 
 }

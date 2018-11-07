@@ -8,7 +8,11 @@ import database.collections.*;
 import database.implementations.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,10 +33,16 @@ public class MainWindow extends JFrame {
     private JPanel checkBoxesPanel;
     private JPanel mapPanel;
     private JPanel dataPanel;
-    private JLabel mapContainer;
     private JList nodesList;
     private JList locationsList;
     private JList edgesList;
+    private JPanel paintPanel;
+    private JSlider slider;
+    private JLabel sliderValue;
+    private JButton minusButton;
+    private JButton plusButton;
+    private JScrollPane scrollMap;
+    private JPanel scalePanel;
 
     private EdgeArray edgeCollection = new EdgeArray();
     private NodeArray nodeCollection = new NodeArray();
@@ -53,6 +63,26 @@ public class MainWindow extends JFrame {
         nodesList.addListSelectionListener(e -> {
             /*int i = nodesList.getSelectedIndex();
             System.out.println(nodesListModel.getElementAt(i).getX());*/
+        });
+
+        slider.addChangeListener(e -> {
+            sliderValue.setText(String.valueOf(slider.getValue()) + "%");
+            ImageIcon icon = ((PaintPanel) paintPanel).getImageIcon();
+            ((PaintPanel) paintPanel).resizeImage(icon, slider.getValue());
+            paintPanel.repaint();
+        });
+
+        plusButton.addActionListener(e -> {
+            int value = slider.getValue();
+            value++;
+            slider.setValue(value);
+        });
+
+        minusButton.addActionListener(e -> {
+            int value = slider.getValue();
+            value--;
+            slider.setValue(value);
+
         });
     }
 
@@ -171,6 +201,11 @@ public class MainWindow extends JFrame {
 
         nodesList.setModel(nodesListModel);
 
+        paintPanel = new PaintPanel();
+        ((PaintPanel) paintPanel).setImageIcon(new ImageIcon("C:\\Users\\Piotr Janus\\Desktop\\testmap_0.png"));
+        paintPanel.repaint();
+
+
     }
 
     /**
@@ -183,16 +218,16 @@ public class MainWindow extends JFrame {
     private void $$$setupUI$$$() {
         createUIComponents();
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
         dataPanel = new JPanel();
-        dataPanel.setLayout(new GridLayoutManager(1, 1, new Insets(10, 0, 10, 10), -1, -1, true, false));
-        mainPanel.add(dataPanel, new GridConstraints(0, 1, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        dataPanel.setLayout(new GridLayoutManager(1, 1, new Insets(10, 0, 10, 10), -1, -1));
+        mainPanel.add(dataPanel, new GridConstraints(0, 2, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, 1, null, null, null, 0, false));
         tabbedPane1 = new JTabbedPane();
         Font tabbedPane1Font = this.$$$getFont$$$(null, Font.BOLD, 14, tabbedPane1.getFont());
         if (tabbedPane1Font != null) tabbedPane1.setFont(tabbedPane1Font);
         tabbedPane1.setTabLayoutPolicy(0);
         tabbedPane1.setTabPlacement(1);
-        dataPanel.add(tabbedPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, 1, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        dataPanel.add(tabbedPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(200, -1), new Dimension(200, 200), null, 0, false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab(ResourceBundle.getBundle("strings").getString("nodes"), panel1);
@@ -213,14 +248,10 @@ public class MainWindow extends JFrame {
         scrollPane3.setViewportView(edgesList);
         mapPanel = new JPanel();
         mapPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 10, 0, 0), -1, -1));
-        mainPanel.add(mapPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JScrollPane scrollPane4 = new JScrollPane();
-        mapPanel.add(scrollPane4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        mapContainer = new JLabel();
-        mapContainer.setHorizontalAlignment(0);
-        mapContainer.setIcon(new ImageIcon(getClass().getResource("/images/samplemap.png")));
-        mapContainer.setText("");
-        scrollPane4.setViewportView(mapContainer);
+        mainPanel.add(mapPanel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(800, -1), new Dimension(800, -1), null, 0, false));
+        scrollMap = new JScrollPane();
+        mapPanel.add(scrollMap, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        scrollMap.setViewportView(paintPanel);
         addButtonsPanel = new JPanel();
         addButtonsPanel.setLayout(new GridLayoutManager(1, 3, new Insets(10, 10, 10, 0), -1, -1));
         mainPanel.add(addButtonsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -246,7 +277,7 @@ public class MainWindow extends JFrame {
         checkBoxesPanel.setLayout(new GridLayoutManager(1, 4, new Insets(0, 10, 10, 0), -1, -1));
         Font checkBoxesPanelFont = this.$$$getFont$$$(null, -1, -1, checkBoxesPanel.getFont());
         if (checkBoxesPanelFont != null) checkBoxesPanel.setFont(checkBoxesPanelFont);
-        mainPanel.add(checkBoxesPanel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        mainPanel.add(checkBoxesPanel, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         allCheckBox = new JCheckBox();
         Font allCheckBoxFont = this.$$$getFont$$$(null, -1, 20, allCheckBox.getFont());
         if (allCheckBoxFont != null) allCheckBox.setFont(allCheckBoxFont);
@@ -267,6 +298,38 @@ public class MainWindow extends JFrame {
         if (edgesCheckBoxFont != null) edgesCheckBox.setFont(edgesCheckBoxFont);
         this.$$$loadButtonText$$$(edgesCheckBox, ResourceBundle.getBundle("strings").getString("edges"));
         checkBoxesPanel.add(edgesCheckBox, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        scalePanel = new JPanel();
+        scalePanel.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.add(scalePanel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_SOUTHEAST, GridConstraints.FILL_NONE, 1, 1, null, null, null, 0, false));
+        slider = new JSlider();
+        slider.setMaximum(250);
+        slider.setMinimum(40);
+        slider.setPaintLabels(true);
+        slider.setValue(100);
+        scalePanel.add(slider, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        sliderValue = new JLabel();
+        Font sliderValueFont = this.$$$getFont$$$(null, Font.BOLD, 14, sliderValue.getFont());
+        if (sliderValueFont != null) sliderValue.setFont(sliderValueFont);
+        sliderValue.setText("100%");
+        scalePanel.add(sliderValue, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        minusButton = new JButton();
+        Font minusButtonFont = this.$$$getFont$$$(null, Font.BOLD, 18, minusButton.getFont());
+        if (minusButtonFont != null) minusButton.setFont(minusButtonFont);
+        minusButton.setHideActionText(false);
+        minusButton.setHorizontalAlignment(0);
+        minusButton.setHorizontalTextPosition(0);
+        minusButton.setText("-");
+        scalePanel.add(minusButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(10, 15), null, 0, false));
+        plusButton = new JButton();
+        Font plusButtonFont = this.$$$getFont$$$(null, Font.BOLD, 16, plusButton.getFont());
+        if (plusButtonFont != null) plusButton.setFont(plusButtonFont);
+        plusButton.setHideActionText(false);
+        plusButton.setHorizontalAlignment(0);
+        plusButton.setHorizontalTextPosition(0);
+        plusButton.setText("+");
+        plusButton.setVerticalAlignment(1);
+        plusButton.setVerticalTextPosition(1);
+        scalePanel.add(plusButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(5, 15), null, 0, false));
     }
 
     /**

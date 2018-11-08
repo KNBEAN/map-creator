@@ -36,7 +36,7 @@ public class PaintPanel extends JPanel {
         int height = (int)(realHeight*((double)resizeInPercent/100));
         int width = (int)(realWidth*((double)resizeInPercent/100));
 
-        System.out.println("New Height: "+height+" new Width: "+ width+" resize: "+((double)resizeInPercent/100));
+        //System.out.println("New Height: "+height+" new Width: "+ width+" resize: "+((double)resizeInPercent/100));
         this.resizedIcon = resizeImageIcon(imageIcon,width, height);
 
         int resizedHeight = this.resizedIcon.getIconHeight();
@@ -47,7 +47,7 @@ public class PaintPanel extends JPanel {
         this.xRatio = (double)resizedWidth/realWidth;
         this.yRatio = (double)resizedHeight/realHeight;
 
-        System.out.println("xRatio: "+xRatio+" yRatio: "+yRatio);
+        //System.out.println("xRatio: "+xRatio+" yRatio: "+yRatio);
 
     }
 
@@ -64,7 +64,6 @@ public class PaintPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println("Paint");
         Graphics2D graphics2D = (Graphics2D) g;
 
         resizedIcon.paintIcon(this,graphics2D,0,0);

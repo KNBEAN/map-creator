@@ -9,6 +9,8 @@ import database.implementations.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,7 +57,11 @@ public class MainWindow extends JFrame {
         addMenuBar();
         $$$setupUI$$$();
         getContentPane().add(mainPanel);
+        addListeners();
 
+    }
+
+    private void addListeners() {
         nodesList.addListSelectionListener(e -> {
             /*int i = nodesList.getSelectedIndex();
             System.out.println(nodesListModel.getElementAt(i).getX());*/
@@ -70,17 +76,56 @@ public class MainWindow extends JFrame {
         });
 
         plusButton.addActionListener(e -> {
-            int value = slider.getValue();
-            value++;
-            slider.setValue(value);
+            slider.setValue(slider.getValue() + 1);
         });
 
         minusButton.addActionListener(e -> {
-            int value = slider.getValue();
-            value--;
-            slider.setValue(value);
+            slider.setValue(slider.getValue() - 1);
 
         });
+
+        paintPanel.addMouseWheelListener(mouseEvent -> {
+            if (mouseEvent.isControlDown() && mouseEvent.getWheelRotation() == -1) {
+                slider.setValue(slider.getValue() + 5);
+            } else if (mouseEvent.isControlDown() && mouseEvent.getWheelRotation() == 1) {
+                slider.setValue(slider.getValue() - 5);
+            }
+        });
+
+        MouseAdapter dragAdapter = getMouseDragAdapter(paintPanel);
+
+        paintPanel.addMouseListener(dragAdapter);
+        paintPanel.addMouseMotionListener(dragAdapter);
+    }
+
+    private MouseAdapter getMouseDragAdapter(JComponent component) {
+
+        return new MouseAdapter() {
+
+            Point point;
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                point = new Point(e.getPoint());
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (point != null) {
+                    JViewport viewPort = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, component);
+                    if (viewPort != null) {
+                        int deltaX = point.x - e.getX();
+                        int deltaY = point.y - e.getY();
+
+                        Rectangle view = viewPort.getViewRect();
+                        view.x += deltaX;
+                        view.y += deltaY;
+
+                        component.scrollRectToVisible(view);
+                    }
+                }
+            }
+        };
     }
 
     private void addMenuBar() {

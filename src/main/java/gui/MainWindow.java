@@ -199,9 +199,8 @@ public class MainWindow extends JFrame {
         nodesList.setModel(nodesListModel);
 
         paintPanel = new PaintPanel();
-        ((PaintPanel) paintPanel).setImageIcon(new ImageIcon("C:\\Users\\Piotr Janus\\Desktop\\testmap_0.png"));
+        ((PaintPanel) paintPanel).setImageIcon(new ImageIcon(getClass().getResource("/images/testmap_0.png")));
         paintPanel.repaint();
-
 
     }
 

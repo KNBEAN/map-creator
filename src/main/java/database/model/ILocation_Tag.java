@@ -4,7 +4,7 @@ package database.model;
  * This interface represents names that can specify one location. Tags represent commonly known name
  *  for places on map.
  */
-public interface Location_Tag {
+public interface ILocation_Tag {
 
     /**
      * Get tag which object holds for it's location

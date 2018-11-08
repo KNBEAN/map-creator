@@ -3,7 +3,7 @@ package database.model;
 /**
  *  This interface represents a table of floor in given building
  */
-public interface Floor {
+public interface IFloor {
 
     /**
      * Show how many floors is in building

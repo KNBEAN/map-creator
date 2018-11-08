@@ -1,6 +1,6 @@
 package database.model;
 
-public interface Node {
+public interface INode {
     /**
      * Returns unique ID of point of the map
      * @return ID

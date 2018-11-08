@@ -1,8 +1,11 @@
 package database.collections;
 
 import database.implementations.Node;
+import database.model.INode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +27,7 @@ class NodeListTest {
     }
 
     @Test
-    void add() {
+    void testAdd() {
         assertTrue(nodeList.add(node1));
         assertFalse(nodeList.add(node1));
         assertTrue(nodeList.add(node2));
@@ -33,22 +36,22 @@ class NodeListTest {
     }
 
     @Test
-    void remove() {
-        add();
+    void testRemove() {
+        testAdd();
         nodeList.remove(node4);
         assertNull(nodeList.get(node4.getId()));
     }
 
     @Test
-    void update() {
-        add();
+    void testUpdate() {
+        testAdd();
         nodeList.update(node1,node4);
         assertEquals(node4,nodeList.get(node4.getId()));
     }
 
     @Test
-    void get() {
-        add();
+    void testGet() {
+        testAdd();
         assertEquals(node2,nodeList.get(node2.getId()));
 
     }

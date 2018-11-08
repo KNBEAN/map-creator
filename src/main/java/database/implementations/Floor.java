@@ -1,12 +1,11 @@
 package database.implementations;
 
 
-
-public class Floor implements database.model.Floor {
+public class Floor implements database.model.IFloor {
     private int floorNumber;
     private String floorName;
 
-    public Floor(int floor,String floorName){
+    public Floor(int floor, String floorName){
         this.floorNumber = floor;
         this.floorName = floorName;
     }

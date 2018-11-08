@@ -2,7 +2,7 @@ package database.implementations;
 
 import database.Id_Generator;
 
-public class Node implements database.model.Node{
+public class Node implements database.model.INode {
 
     private int id;
     private int floor;
@@ -10,14 +10,14 @@ public class Node implements database.model.Node{
     private int y;
     private int locationID;
 
-    public Node (int x,int y,int floor,int locationId){
+    public Node(int x, int y, int floor, int locationId){
         id = Id_Generator.getId();
         this.x = x;
         this.y = y;
         this.floor = floor;
         this.locationID = locationId;
     }
-    public Node (int x,int y,int floor){
+    public Node(int x, int y, int floor){
         id = Id_Generator.getId();
         this.x = x;
         this.y = y;
@@ -52,7 +52,7 @@ public class Node implements database.model.Node{
     @Override
     public boolean equals(Object obj) {
         if (obj.getClass() != Node.class) return false;
-        Node  objectNode = (Node) obj;
+        Node objectNode = (Node) obj;
         if (objectNode.getX() == x
                 && objectNode.getFloor() == floor
                 && objectNode.getY() == y

@@ -1,36 +1,35 @@
 package database.collections;
-
-import database.model.Location;
+import database.model.ILocation;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class LocationList {
-    private ArrayList<Location> locations;
+    static private ArrayList<ILocation> ILocations;
 
     public LocationList() {
-        locations = new ArrayList<>();
+        ILocations = new ArrayList<>();
     }
 
-    public boolean add(Location location){
-        if (locations.contains(location)) return false;
-        for (Location temp : locations){
-            if (temp.getName() .equals( location.getName())) return false;
+    public boolean add(ILocation ILocation){
+        if (ILocations.contains(ILocation)) return false;
+        for (ILocation temp : ILocations){
+            if (temp.getName() .equals( ILocation.getName())) return false;
         }
-        return locations.add(location);
+        return ILocations.add(ILocation);
     }
 
-    public void remove(Location location){
-        locations.remove(location);
+    public void remove(ILocation ILocation){
+        ILocations.remove(ILocation);
     }
 
-    public void update(Location location, Location upLocation){
-        remove(location);
-        add(upLocation);
+    public void update(ILocation ILocation, ILocation upILocation){
+        remove(ILocation);
+        add(upILocation);
     }
 
-    public Location get(int id){
-        for(Location location : locations) if (location.getId()==id) return location;
+    public ILocation get(int id){
+        for(ILocation ILocation : ILocations) if (ILocation.getId()==id) return ILocation;
         return null;
     }
+
 }

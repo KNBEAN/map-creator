@@ -1,37 +1,38 @@
 package database.collections;
 
 
-import database.model.Edge;
+import database.model.IEdge;
 
 import java.util.ArrayList;
 
 public class EdgeList {
-    private ArrayList<Edge> edges;
+   static private ArrayList<IEdge> IEdges;
 
     public EdgeList() {
-        this.edges = new ArrayList<>();
+        this.IEdges = new ArrayList<>();
     }
 
-    public void add(Edge edge){
-        if (edges.contains(edge)) return;
-        edges.add(edge);
-        edges.add(edge.swapEnds());
+    public void add(IEdge IEdge){
+        if (IEdges.contains(IEdge)) return;
+        IEdges.add(IEdge);
+        IEdges.add(IEdge.swapEnds());
     }
 
-    public Edge get(int id){
-        for (Edge s:edges){
+    public IEdge get(int id){
+        for (IEdge s: IEdges){
             if (s.getId() == id) return s;
         }
         return null;
     }
 
-    public void update(Edge edge,Edge upEdge){
-        remove(edge);
-        add(upEdge);
+    public void update(IEdge IEdge, IEdge upIEdge){
+        remove(IEdge);
+        add(upIEdge);
     }
 
-    public void remove(Edge edge){
-        edges.remove(edge);
-        edges.remove(edge.swapEnds());
+    public void remove(IEdge IEdge){
+        IEdges.remove(IEdge);
+        IEdges.remove(IEdge.swapEnds());
     }
+
 }

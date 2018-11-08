@@ -2,7 +2,7 @@ package database.implementations;
 
 import database.Id_Generator;
 
-public class Location implements database.model.Location {
+public class Location implements database.model.ILocation {
 
     private int id;
     private String name;

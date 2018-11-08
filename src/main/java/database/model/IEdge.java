@@ -1,19 +1,17 @@
 package database.model;
 
-import java.security.spec.ECGenParameterSpec;
-
 /**
  * This interface represents directional edge on the graph. Edge is a object that make connection
  * between nodes.
  */
-public interface Edge {
+public interface IEdge {
 
     /**
      * Calculate length between node with from_id to node with
      * to_id
      * @return
      */
-    int calculateLength(Node from, Node to);
+    int calculateLength(INode from, INode to);
 
 
     /**
@@ -40,6 +38,6 @@ public interface Edge {
      */
     int getLength();
 
-    Edge swapEnds();
+    IEdge swapEnds();
 
 }

@@ -1,10 +1,10 @@
 package database.implementations;
 
-public class Location_Tag implements database.model.Location_Tag {
+public class Location_Tag implements database.model.ILocation_Tag {
     private int locationId;
     private String tag;
 
-    public Location_Tag (String tag, int locationId){
+    public Location_Tag(String tag, int locationId){
         this.tag = tag;
         this.locationId = locationId;
     }

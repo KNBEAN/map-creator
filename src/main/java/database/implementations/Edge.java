@@ -1,22 +1,23 @@
 package database.implementations;
 
 import database.Id_Generator;
+import database.model.INode;
 
-public class Edge implements database.model.Edge {
+public class Edge implements database.model.IEdge {
 
     private int id;
     private int from;
     private int to;
     private int length;
 
-    public Edge (Node from_Node,Node to_Node){
+    public Edge(Node from_Node, Node to_Node){
         id = Id_Generator.getId();
         this.from = from_Node.getId();
         this.to = to_Node.getId();
         this.length = calculateLength(from_Node,to_Node);
     }
 
-    public Edge (int from_id,int to_id,int length){
+    public Edge(int from_id, int to_id, int length){
         id = Id_Generator.getId();
         this.from = from_id;
         this.to = to_id;
@@ -24,7 +25,7 @@ public class Edge implements database.model.Edge {
     }
 
     @Override
-    public int calculateLength(database.model.Node from, database.model.Node to) {
+    public int calculateLength(INode from, INode to) {
         return (int) Math.sqrt(Math.pow((double)from.getX()-to.getX(),2)
                 + Math.pow((double)from.getY()-to.getY(),2));
     }

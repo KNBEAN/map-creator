@@ -1,33 +1,34 @@
 package database.collections;
 
-import database.model.Node;
+import database.model.INode;
 
 import java.util.ArrayList;
 
 public class NodeList {
-    private ArrayList<Node> nodes;
+    static private ArrayList<INode> INodes;
 
-    public NodeList() { nodes = new ArrayList<>();
+    public NodeList() { INodes = new ArrayList<>();
     }
 
-    public boolean add(Node node){
-        if (nodes.contains(node)) return false;
-        return nodes.add(node);
+    public boolean add(INode INode){
+        if (INodes.contains(INode)) return false;
+        return INodes.add(INode);
     }
 
-    public void remove(Node node){
-        nodes.remove(node);
+    public void remove(INode INode){
+        INodes.remove(INode);
     }
 
-    public void update(Node node, Node upNode){
-        remove(node);
-        add(upNode);
+    public void update(INode INode, INode upINode){
+        remove(INode);
+        add(upINode);
     }
 
-    public Node get(int id){
-        for (Node node:nodes){
-            if (node.getId()==id) return node;
+    public INode get(int id){
+        for (INode INode : INodes){
+            if (INode.getId()==id) return INode;
         }
         return null;
     }
+
 }

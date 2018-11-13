@@ -34,11 +34,11 @@ public class MainWindow extends JFrame {
     private JList nodesList;
     private JList locationsList;
     private JList edgesList;
-    private JPanel paintPanel;
-    private JSlider slider;
-    private JLabel sliderValue;
-    private JButton minusButton;
-    private JButton plusButton;
+    private JPanel mapPaintPanel;
+    private JSlider scaleSlider;
+    private JLabel scaleSliderValue;
+    private JButton scaleMinusButton;
+    private JButton scalePlusButton;
     private JScrollPane scrollMap;
     private JPanel scalePanel;
 
@@ -62,45 +62,40 @@ public class MainWindow extends JFrame {
     }
 
     private void addListeners() {
-        nodesList.addListSelectionListener(e -> {
-            /*int i = nodesList.getSelectedIndex();
-            System.out.println(nodesListModel.getElementAt(i).getX());*/
+        scaleSlider.addChangeListener(e -> {
+            scaleSliderValue.setText(String.valueOf(scaleSlider.getValue()) + "%");
+            ImageIcon icon = ((PaintPanel) mapPaintPanel).getImageIcon();
+            ((PaintPanel) mapPaintPanel).resizeImage(icon, scaleSlider.getValue());
+            mapPaintPanel.repaint();
+            mapPaintPanel.revalidate();
         });
 
-        slider.addChangeListener(e -> {
-            sliderValue.setText(String.valueOf(slider.getValue()) + "%");
-            ImageIcon icon = ((PaintPanel) paintPanel).getImageIcon();
-            ((PaintPanel) paintPanel).resizeImage(icon, slider.getValue());
-            paintPanel.repaint();
-            paintPanel.revalidate();
+        scalePlusButton.addActionListener(e -> {
+            scaleSlider.setValue(scaleSlider.getValue() + 1);
         });
 
-        plusButton.addActionListener(e -> {
-            slider.setValue(slider.getValue() + 1);
-        });
-
-        minusButton.addActionListener(e -> {
-            slider.setValue(slider.getValue() - 1);
+        scaleMinusButton.addActionListener(e -> {
+            scaleSlider.setValue(scaleSlider.getValue() - 1);
 
         });
 
-        paintPanel.addMouseWheelListener(mouseEvent -> {
+        mapPaintPanel.addMouseWheelListener(mouseEvent -> {
             if (mouseEvent.isControlDown() && mouseEvent.getWheelRotation() == -1) {
-                slider.setValue(slider.getValue() + 5);
+                scaleSlider.setValue(scaleSlider.getValue() + 5);
             } else if (mouseEvent.isControlDown() && mouseEvent.getWheelRotation() == 1) {
-                slider.setValue(slider.getValue() - 5);
+                scaleSlider.setValue(scaleSlider.getValue() - 5);
             }
         });
 
-        MouseAdapter dragAdapter = getMouseDragAdapter(paintPanel);
+        MouseAdapter dragAdapter = getMouseDragAdapter(mapPaintPanel);
 
-        paintPanel.addMouseListener(dragAdapter);
-        paintPanel.addMouseMotionListener(dragAdapter);
+        mapPaintPanel.addMouseListener(dragAdapter);
+        mapPaintPanel.addMouseMotionListener(dragAdapter);
     }
 
     private MouseAdapter getMouseDragAdapter(JComponent component) {
 
-        return new MouseAdapter() {
+        MouseAdapter mouseAdapter = new MouseAdapter() {
 
             Point point;
 
@@ -126,6 +121,7 @@ public class MainWindow extends JFrame {
                 }
             }
         };
+        return mouseAdapter;
     }
 
     private void addMenuBar() {
@@ -243,9 +239,9 @@ public class MainWindow extends JFrame {
 
         nodesList.setModel(nodesListModel);
 
-        paintPanel = new PaintPanel();
-        ((PaintPanel) paintPanel).setImageIcon(new ImageIcon(getClass().getResource("/images/testmap_0.png")));
-        paintPanel.repaint();
+        mapPaintPanel = new PaintPanel();
+        ((PaintPanel) mapPaintPanel).setImageIcon(new ImageIcon(getClass().getResource("/images/testmap_0.png")));
+        mapPaintPanel.repaint();
 
     }
 
@@ -294,7 +290,7 @@ public class MainWindow extends JFrame {
         scrollMap.setHorizontalScrollBarPolicy(32);
         scrollMap.setVerticalScrollBarPolicy(22);
         mapPanel.add(scrollMap, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        scrollMap.setViewportView(paintPanel);
+        scrollMap.setViewportView(mapPaintPanel);
         addButtonsPanel = new JPanel();
         addButtonsPanel.setLayout(new GridLayoutManager(1, 3, new Insets(10, 10, 10, 0), -1, -1));
         mainPanel.add(addButtonsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -344,40 +340,40 @@ public class MainWindow extends JFrame {
         scalePanel = new JPanel();
         scalePanel.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(scalePanel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_SOUTHEAST, GridConstraints.FILL_NONE, 1, 1, null, null, null, 0, false));
-        slider = new JSlider();
-        slider.setMaximum(250);
-        slider.setMinimum(40);
-        slider.setMinorTickSpacing(0);
-        slider.setPaintLabels(true);
-        slider.setPaintTicks(false);
-        slider.setPaintTrack(true);
-        slider.setSnapToTicks(false);
-        slider.setValue(100);
-        slider.setValueIsAdjusting(false);
-        scalePanel.add(slider, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        sliderValue = new JLabel();
-        Font sliderValueFont = this.$$$getFont$$$(null, Font.BOLD, 14, sliderValue.getFont());
-        if (sliderValueFont != null) sliderValue.setFont(sliderValueFont);
-        sliderValue.setText("100%");
-        scalePanel.add(sliderValue, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        minusButton = new JButton();
-        Font minusButtonFont = this.$$$getFont$$$(null, Font.BOLD, 18, minusButton.getFont());
-        if (minusButtonFont != null) minusButton.setFont(minusButtonFont);
-        minusButton.setHideActionText(false);
-        minusButton.setHorizontalAlignment(0);
-        minusButton.setHorizontalTextPosition(0);
-        minusButton.setText("-");
-        scalePanel.add(minusButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(10, 15), null, 0, false));
-        plusButton = new JButton();
-        Font plusButtonFont = this.$$$getFont$$$(null, Font.BOLD, 16, plusButton.getFont());
-        if (plusButtonFont != null) plusButton.setFont(plusButtonFont);
-        plusButton.setHideActionText(false);
-        plusButton.setHorizontalAlignment(0);
-        plusButton.setHorizontalTextPosition(0);
-        plusButton.setText("+");
-        plusButton.setVerticalAlignment(1);
-        plusButton.setVerticalTextPosition(1);
-        scalePanel.add(plusButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(5, 15), null, 0, false));
+        scaleSlider = new JSlider();
+        scaleSlider.setMaximum(250);
+        scaleSlider.setMinimum(40);
+        scaleSlider.setMinorTickSpacing(0);
+        scaleSlider.setPaintLabels(true);
+        scaleSlider.setPaintTicks(false);
+        scaleSlider.setPaintTrack(true);
+        scaleSlider.setSnapToTicks(false);
+        scaleSlider.setValue(100);
+        scaleSlider.setValueIsAdjusting(false);
+        scalePanel.add(scaleSlider, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        scaleSliderValue = new JLabel();
+        Font scaleSliderValueFont = this.$$$getFont$$$(null, Font.BOLD, 14, scaleSliderValue.getFont());
+        if (scaleSliderValueFont != null) scaleSliderValue.setFont(scaleSliderValueFont);
+        scaleSliderValue.setText("100%");
+        scalePanel.add(scaleSliderValue, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        scaleMinusButton = new JButton();
+        Font scaleMinusButtonFont = this.$$$getFont$$$(null, Font.BOLD, 18, scaleMinusButton.getFont());
+        if (scaleMinusButtonFont != null) scaleMinusButton.setFont(scaleMinusButtonFont);
+        scaleMinusButton.setHideActionText(false);
+        scaleMinusButton.setHorizontalAlignment(0);
+        scaleMinusButton.setHorizontalTextPosition(0);
+        scaleMinusButton.setText("-");
+        scalePanel.add(scaleMinusButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(10, 15), null, 0, false));
+        scalePlusButton = new JButton();
+        Font scalePlusButtonFont = this.$$$getFont$$$(null, Font.BOLD, 16, scalePlusButton.getFont());
+        if (scalePlusButtonFont != null) scalePlusButton.setFont(scalePlusButtonFont);
+        scalePlusButton.setHideActionText(false);
+        scalePlusButton.setHorizontalAlignment(0);
+        scalePlusButton.setHorizontalTextPosition(0);
+        scalePlusButton.setText("+");
+        scalePlusButton.setVerticalAlignment(1);
+        scalePlusButton.setVerticalTextPosition(1);
+        scalePanel.add(scalePlusButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(5, 15), null, 0, false));
     }
 
     /**

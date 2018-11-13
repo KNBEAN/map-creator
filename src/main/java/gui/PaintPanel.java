@@ -31,23 +31,17 @@ public class PaintPanel extends JPanel {
         setJPanelSize(realWidth,realHeight);
     }
 
-    public void resizeImage(ImageIcon imageIcon, int resizeInPercent){
+    public void resizeImage(ImageIcon imageIcon, int scaleInPercent){
 
-        int height = (int)(realHeight*((double)resizeInPercent/100));
-        int width = (int)(realWidth*((double)resizeInPercent/100));
+        int resizedHeight = (int)(realHeight*((double)scaleInPercent/100));
+        int resizedWidth = (int)(realWidth*((double)scaleInPercent/100));
 
-        //System.out.println("New Height: "+height+" new Width: "+ width+" resize: "+((double)resizeInPercent/100));
-        this.resizedIcon = resizeImageIcon(imageIcon,width, height);
-
-        int resizedHeight = this.resizedIcon.getIconHeight();
-        int resizedWidth = this.resizedIcon.getIconWidth();
+        this.resizedIcon = resizeImageIcon(imageIcon,resizedWidth, resizedHeight);
 
         setJPanelSize(resizedWidth, resizedHeight);
 
         this.xRatio = (double)resizedWidth/realWidth;
         this.yRatio = (double)resizedHeight/realHeight;
-
-        //System.out.println("xRatio: "+xRatio+" yRatio: "+yRatio);
 
     }
 
@@ -68,12 +62,12 @@ public class PaintPanel extends JPanel {
 
         resizedIcon.paintIcon(this,graphics2D,0,0);
         //sample
-        int[] coordsTable = transposeCoords(546,117,20);
+        int[] coordsTable = scaleCoords(546,117,20);
         graphics2D.fillOval(coordsTable[0],coordsTable[1],coordsTable[2],coordsTable[2]);
 
     }
 
-    private int [] transposeCoords(int x, int y, int radius){
+    private int [] scaleCoords(int x, int y, int radius){
 
         int[] table = new int[3];
         table[0] = (int)(x*xRatio);

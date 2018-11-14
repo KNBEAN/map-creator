@@ -37,7 +37,7 @@ public class Main {
             }
         });
 
-        frame.setBounds(300,100,1000,600);
+        frame.setBounds(300,100,1100,600);
         frame.setVisible(true);
     }
 

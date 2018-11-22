@@ -18,6 +18,7 @@ class nodeDAOImpTest {
 
     @BeforeEach
     void setUp() {
+        DatabaseManager.dropTables();
         DatabaseManager.createTables();
         nodeDAO = new NodeDAOImp();
     }

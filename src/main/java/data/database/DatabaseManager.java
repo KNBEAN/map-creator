@@ -46,9 +46,9 @@ public class DatabaseManager {
                 " x integer NOT NULL, \n" +
                 " y integer NOT NULL,  \n" +
                 " floor integer NOT NULL, \n" +
-                " location_id integer NOT NULL, \n" +
+                " location_id integer DEFAULT -1 NOT NULL , \n" +
                 "FOREIGN KEY (location_id) REFERENCES locations(id),\n" +
-                "FOREIGN KEY(floor) REFERENCES floors(floor));";
+                "FOREIGN KEY(floor) REFERENCES floors(floor) ON UPDATE SET NULL ON DELETE SET NULL);";
         String sqlFLOORS = "CREATE  TABLE IF NOT EXISTS floors(\n" +
                 "floor integer PRIMARY KEY, \n" +
                 "name text NOT NULL );";
@@ -61,11 +61,26 @@ public class DatabaseManager {
                 "location_id integer NOT NULL, FOREIGN KEY(location_id) REFERENCES locations(id));";
         String sqlEDGES = "CREATE TABLE IF NOT EXISTS edges(\n" +
                 "id integer NOT NULL PRIMARY KEY, \n" +
-                "'from' integer NOT NULL, \n" +
-                "'to' integer NOT NULL, \n" +
+                "[from] integer NOT NULL, \n" +
+                "[to] integer NOT NULL, \n" +
                 "length integer NOT NULL, \n" +
-                "FOREIGN KEY ('from') REFERENCES nodes(id), \n" +
-                "FOREIGN KEY ('to') REFERENCES nodes(id));";
+                "FOREIGN KEY ([from]) REFERENCES nodes(id) ON UPDATE set NULL ON DELETE set NULL , \n" +
+                "FOREIGN KEY ([to]) REFERENCES nodes(id) ON UPDATE set NULL ON DELETE set NULL);";
+        executeTableStatements(sqlNODES, sqlFLOORS, sqlLOCATIONS, sqlLOCATION_TAGS, sqlEDGES);
+
+    }
+
+    public static void dropTables(){
+        String sqlNODES = "DROP TABLE nodes;";
+        String sqlFLOORS= "DROP TABLE floors;";
+        String sqlLOCATIONS = "DROP TABLE locations;";
+        String sqlLOCATION_TAGS = "DROP TABLE location_tags;";
+        String sqlEDGES = "DROP TABLE edges;";
+        executeTableStatements(sqlNODES, sqlFLOORS, sqlLOCATIONS, sqlLOCATION_TAGS, sqlEDGES);
+
+    }
+
+    private static void executeTableStatements(String sqlNODES, String sqlFLOORS, String sqlLOCATIONS, String sqlLOCATION_TAGS, String sqlEDGES) {
         try (Connection connection = connect()) {
             Statement stmt = connection.createStatement();
             stmt.execute(sqlNODES);
@@ -81,6 +96,5 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
     }
 }

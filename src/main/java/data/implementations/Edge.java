@@ -24,6 +24,13 @@ public class Edge implements data.model.IEdge {
         this.length = length;
     }
 
+    public Edge(int id, int from, int to, int length) {
+        this.id = id;
+        this.from = from;
+        this.to = to;
+        this.length = length;
+    }
+
     @Override
     public int calculateLength(INode from, INode to) {
         return (int) Math.sqrt(Math.pow((double)from.getX()-to.getX(),2)

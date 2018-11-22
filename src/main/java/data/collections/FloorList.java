@@ -1,11 +1,12 @@
-package database.collections;
+package data.collections;
 
-import database.model.IFloor;
+import data.model.IFloor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FloorList {
-   static private ArrayList<IFloor> IFloors;
+   static private List<IFloor> IFloors;
 
     public FloorList() {
         this.IFloors = new ArrayList<>();

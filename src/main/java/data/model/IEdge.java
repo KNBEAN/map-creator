@@ -1,4 +1,4 @@
-package database.model;
+package data.model;
 
 /**
  * This interface represents directional edge on the graph. Edge is a object that make connection

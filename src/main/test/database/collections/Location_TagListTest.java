@@ -1,6 +1,6 @@
-package database.collections;
+package data.collections;
 
-import database.implementations.Location_Tag;
+import data.implementations.Location_Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

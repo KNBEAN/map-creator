@@ -1,6 +1,6 @@
-package database.implementations;
+package data.implementations;
 
-public class Location_Tag implements database.model.ILocation_Tag {
+public class Location_Tag implements data.model.ILocation_Tag {
     private int locationId;
     private String tag;
 

@@ -1,6 +1,6 @@
-package database.collections;
+package data.collections;
 
-import database.implementations.Edge;
+import data.implementations.Edge;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

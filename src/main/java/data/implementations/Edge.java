@@ -1,9 +1,9 @@
-package database.implementations;
+package data.implementations;
 
-import database.Id_Generator;
-import database.model.INode;
+import data.Id_Generator;
+import data.model.INode;
 
-public class Edge implements database.model.IEdge {
+public class Edge implements data.model.IEdge {
 
     private int id;
     private int from;

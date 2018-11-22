@@ -1,4 +1,4 @@
-package database.model;
+package data.model;
 
 /**
  *  This interface represents a table of floor in given building

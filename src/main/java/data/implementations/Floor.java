@@ -1,7 +1,7 @@
-package database.implementations;
+package data.implementations;
 
 
-public class Floor implements database.model.IFloor {
+public class Floor implements data.model.IFloor {
     private int floorNumber;
     private String floorName;
 

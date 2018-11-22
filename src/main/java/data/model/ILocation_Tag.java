@@ -1,4 +1,4 @@
-package database.model;
+package data.model;
 
 /**
  * This interface represents names that can specify one location. Tags represent commonly known name

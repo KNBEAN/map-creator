@@ -1,8 +1,8 @@
-package database.implementations;
+package data.implementations;
 
-import database.Id_Generator;
+import data.Id_Generator;
 
-public class Location implements database.model.ILocation {
+public class Location implements data.model.ILocation {
 
     private int id;
     private String name;

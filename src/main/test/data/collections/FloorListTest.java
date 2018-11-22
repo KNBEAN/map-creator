@@ -1,6 +1,6 @@
-package database.collections;
+package data.collections;
 
-import database.implementations.Floor;
+import data.implementations.Floor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

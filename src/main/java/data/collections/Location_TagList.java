@@ -1,11 +1,12 @@
-package database.collections;
+package data.collections;
 
-import database.model.ILocation_Tag;
+import data.model.ILocation_Tag;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Location_TagList {
-   static private ArrayList<ILocation_Tag> tags;
+   static private List<ILocation_Tag> tags;
 
     public Location_TagList(){
         tags = new ArrayList<>();}

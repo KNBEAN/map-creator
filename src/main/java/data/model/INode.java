@@ -1,4 +1,4 @@
-package database.model;
+package data.model;
 
 public interface INode {
     /**

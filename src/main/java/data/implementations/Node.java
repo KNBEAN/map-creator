@@ -1,8 +1,8 @@
-package database.implementations;
+package data.implementations;
 
-import database.Id_Generator;
+import data.Id_Generator;
 
-public class Node implements database.model.INode {
+public class Node implements data.model.INode {
 
     private int id;
     private int floor;
@@ -22,6 +22,14 @@ public class Node implements database.model.INode {
         this.x = x;
         this.y = y;
         this.floor = floor;
+    }
+
+    public Node(int id,  int x, int y,int floor, int locationID) {
+        this.id = id;
+        this.floor = floor;
+        this.x = x;
+        this.y = y;
+        this.locationID = locationID;
     }
 
     @Override

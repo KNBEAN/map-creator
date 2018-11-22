@@ -1,12 +1,13 @@
-package database.collections;
+package data.collections;
 
 
-import database.model.IEdge;
+import data.model.IEdge;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EdgeList {
-   static private ArrayList<IEdge> IEdges;
+   static private List<IEdge> IEdges;
 
     public EdgeList() {
         this.IEdges = new ArrayList<>();

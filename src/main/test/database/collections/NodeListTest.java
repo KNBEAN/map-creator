@@ -1,7 +1,7 @@
-package database.collections;
+package data.collections;
 
-import database.implementations.Node;
-import database.model.INode;
+import data.implementations.Node;
+import data.model.INode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

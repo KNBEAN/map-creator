@@ -59,8 +59,8 @@ public class DatabaseManager {
                 " y integer NOT NULL,  \n" +
                 " floor integer NOT NULL, \n" +
                 " location_id integer DEFAULT -1 NOT NULL , \n" +
-                "FOREIGN KEY (location_id) REFERENCES locations(id),\n" +
-                "FOREIGN KEY(floor) REFERENCES floors(floor) ON UPDATE SET NULL ON DELETE SET NULL);";
+                "FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE SET DEFAULT ON UPDATE CASCADE,\n" +
+                "FOREIGN KEY(floor) REFERENCES floors(floor) ON UPDATE CASCADE ON DELETE CASCADE);";
         String sqlFLOORS = "CREATE  TABLE IF NOT EXISTS floors(\n" +
                 "floor integer PRIMARY KEY, \n" +
                 "name text NOT NULL, \n" +
@@ -71,14 +71,14 @@ public class DatabaseManager {
                 " description text);";
         String sqlLOCATION_TAGS = "CREATE TABLE IF NOT EXISTS location_tags(\n" +
                 "tag text PRIMARY KEY,\n" +
-                "location_id integer NOT NULL, FOREIGN KEY(location_id) REFERENCES locations(id));";
+                "location_id integer NOT NULL, FOREIGN KEY(location_id) REFERENCES locations(id) ON UPDATE CASCADE ON DELETE CASCADE);";
         String sqlEDGES = "CREATE TABLE IF NOT EXISTS edges(\n" +
                 "id integer NOT NULL PRIMARY KEY, \n" +
                 "[from] integer NOT NULL, \n" +
                 "[to] integer NOT NULL, \n" +
                 "length integer NOT NULL, \n" +
-                "FOREIGN KEY ([from]) REFERENCES nodes(id) ON UPDATE set NULL ON DELETE set NULL , \n" +
-                "FOREIGN KEY ([to]) REFERENCES nodes(id) ON UPDATE set NULL ON DELETE set NULL);";
+                "FOREIGN KEY ([from]) REFERENCES nodes(id) ON UPDATE CASCADE ON DELETE CASCADE, \n" +
+                "FOREIGN KEY ([to]) REFERENCES nodes(id) ON UPDATE CASCADE ON DELETE CASCADE);";
         executeTableStatements(sqlNODES, sqlFLOORS, sqlLOCATIONS, sqlLOCATION_TAGS, sqlEDGES);
 
     }

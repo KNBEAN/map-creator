@@ -1,12 +1,11 @@
 package data.dao;
 
+import data.dao.interfaces.EdgeDAO;
 import data.database.DatabaseManager;
 import data.implementations.Edge;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EdgeDAOImp implements EdgeDAO {
@@ -36,6 +35,38 @@ public class EdgeDAOImp implements EdgeDAO {
         }
         resultSet.close();
         return edge;
+    }
+
+    private List<Edge> wrapInEdges(ResultSet resultSet) throws SQLException{
+        List<Edge> edges = new ArrayList<>();
+        while (resultSet.next()){
+            edges.add(new Edge(
+                     resultSet.getInt("id")
+                    ,resultSet.getInt("from")
+                    ,resultSet.getInt("to")
+                    ,resultSet.getInt("length")));
+        }
+        return edges;
+    }
+
+    @Override
+    public void insert(List<Edge> edges) {
+        String sql = "INSERT INTO edges(id,[from],[to],[length]) VALUES(?,?,?,?)";
+        int row_count = 0;
+        try( Connection connection = DatabaseManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            for (Edge edge:edges) {
+                setPrepStatementParams(edge, preparedStatement);
+                row_count = preparedStatement.executeUpdate();
+                if (row_count!=0) {
+                    edge = edge.swapEnds();
+                    setPrepStatementParams(edge, preparedStatement);
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
@@ -70,22 +101,72 @@ public class EdgeDAOImp implements EdgeDAO {
     }
 
     @Override
-    public void delete(int id) {
-
+    public void delete(int from,int to) {
+        String sql = "DELETE FROM edges WHERE [from] = ? AND [to] = ?";
+        int row_count = 0;
+        try (Connection connection = DatabaseManager.connect();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1,from);
+            pstmt.setInt(2,to);
+            row_count = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (row_count!=0) {
+                try (Connection connection = DatabaseManager.connect();
+                     PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                    pstmt.setInt(1, to);
+                    pstmt.setInt(2, from);
+                    pstmt.executeUpdate();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
     }
 
     @Override
     public void update(Edge edge) {
-
+        String sql = "UPDATE edges SET [from] = ? , [to] =?,[length]=? WHERE id=?";
+        int row_count = 0;
+        try (   Connection connection = DatabaseManager.connect();
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1,edge.getFrom());
+            pstmt.setInt(2,edge.getTo());
+            pstmt.setInt(3,edge.getLength());
+            pstmt.setInt(4,edge.getId());
+            row_count = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public List<Edge> getAllEdges() {
+        String sql = "SELECT id, [from], [to],[length] FROM edges";
+        try(Connection connection = DatabaseManager.connect();
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(sql)){
+            return wrapInEdges(resultSet);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         return null;
     }
 
     @Override
     public List<Edge> getAllEdgesOnFloor(int floor) {
+        String sql = "SELECT id, [from], [to],[length] FROM edges WHERE [from] IN (SELECT id FROM nodes WHERE floor =?)" +
+                " or [to] IN (SELECT id FROM nodes WHERE floor =?)";
+        try(Connection connection = DatabaseManager.connect();
+            PreparedStatement pstmt = connection.prepareStatement(sql)){
+            pstmt.setInt(1,floor);
+            pstmt.setInt(2,floor);
+            ResultSet resultSet = pstmt.executeQuery();
+            return wrapInEdges(resultSet);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         return null;
     }
 }

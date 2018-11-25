@@ -1,5 +1,6 @@
 package data.dao;
 
+import data.dao.interfaces.NodeDAO;
 import data.database.DatabaseManager;
 import data.implementations.Node;
 
@@ -10,8 +11,30 @@ import java.util.List;
 public class NodeDAOImp implements NodeDAO {
 
     @Override
+    public void insert(List<Node> nodes) {
+        String sql = "INSERT INTO nodes(id,x,y,floor,location_id) VALUES(?,?,?,?,?)";
+        try( Connection connection = DatabaseManager.connect();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (Node node:nodes) {
+                wrapNodeInPreparedStatement(pstmt, node);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void wrapNodeInPreparedStatement(PreparedStatement pstmt, Node node) throws SQLException {
+        pstmt.setInt(1, node.getId());
+        pstmt.setInt(2, node.getX());
+        pstmt.setInt(3, node.getY());
+        pstmt.setInt(4, node.getFloor());
+        pstmt.setInt(5, node.getLocationID());
+        pstmt.executeUpdate();
+    }
+
+    @Override
     public Node getNode(int id) {
-        String sql = "SELECT id,x,y,floor,location_id FROM nodes WHERE id == ?";
+        String sql = "SELECT id,x,y,floor,location_id FROM nodes WHERE id = ?";
         try( Connection connection = DatabaseManager.connect();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1,id);
@@ -57,12 +80,7 @@ public class NodeDAOImp implements NodeDAO {
             String sql = "INSERT INTO nodes(id,x,y,floor,location_id) VALUES(?,?,?,?,?)";
             try( Connection connection = DatabaseManager.connect();
                  PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                pstmt.setInt(1,node.getId());
-                pstmt.setInt(2,node.getX());
-                pstmt.setInt(3,node.getY());
-                pstmt.setInt(4,node.getFloor());
-                pstmt.setInt(5,node.getLocationID());
-                pstmt.executeUpdate();
+                wrapNodeInPreparedStatement(pstmt, node);
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }

@@ -1,17 +1,21 @@
 package data.database;
 
+import org.sqlite.SQLiteConfig;
+
 import java.sql.*;
 
 public class DatabaseManager {
 
     private static Connection connection = null;
     private static final String DATABASE_NAME = "data.db";
+    private static  SQLiteConfig sqliteConfig = null;
 
     public static void createNewDatabase() {
-
+        sqliteConfig = new SQLiteConfig();
+        sqliteConfig.enforceForeignKeys(true);
         String url = "jdbc:sqlite:" + DATABASE_NAME;
         try {
-            connection = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url,sqliteConfig.toProperties());
             System.out.println("Connection to SQLite has been established");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -26,20 +30,28 @@ public class DatabaseManager {
                 System.out.println(e.getMessage());
             }
         }
+        createTables();
     }
 
     public static Connection connect() {
         String url = "jdbc:sqlite:data.db";
         try {
-            connection = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url, sqliteConfig.toProperties());
             System.out.println("Connection to SQLite has been established");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            createNewDatabase();
+        } finally {
+            try {
+                connection = DriverManager.getConnection(url, sqliteConfig.toProperties());
+                System.out.println("Connection to SQLite has been established");
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            return connection;
         }
-        return connection;
     }
-
-    public static void createTables() {
+    public static void createTables(){
 
         String sqlNODES = "CREATE TABLE IF NOT EXISTS nodes (\n" +
                 " id integer PRIMARY KEY, \n" +
@@ -51,7 +63,8 @@ public class DatabaseManager {
                 "FOREIGN KEY(floor) REFERENCES floors(floor) ON UPDATE SET NULL ON DELETE SET NULL);";
         String sqlFLOORS = "CREATE  TABLE IF NOT EXISTS floors(\n" +
                 "floor integer PRIMARY KEY, \n" +
-                "name text NOT NULL );";
+                "name text NOT NULL, \n" +
+                "imagePath text);";
         String sqlLOCATIONS = "CREATE TABLE IF NOT EXISTS locations (" +
                 " id integer PRIMARY KEY ,\n" +
                 " name text NOT NULL ,\n" +
@@ -83,18 +96,19 @@ public class DatabaseManager {
     private static void executeTableStatements(String sqlNODES, String sqlFLOORS, String sqlLOCATIONS, String sqlLOCATION_TAGS, String sqlEDGES) {
         try (Connection connection = connect()) {
             Statement stmt = connection.createStatement();
-            stmt.execute(sqlNODES);
-            stmt = connection.createStatement();
-            stmt.execute(sqlFLOORS);
-            stmt = connection.createStatement();
-            stmt.execute(sqlLOCATIONS);
+            stmt.execute(sqlEDGES);
             stmt = connection.createStatement();
             stmt.execute(sqlLOCATION_TAGS);
             stmt = connection.createStatement();
-            stmt.execute(sqlEDGES);
+            stmt.execute(sqlNODES);
+            stmt = connection.createStatement();
+            stmt.execute(sqlLOCATIONS);
+            stmt = connection.createStatement();
+            stmt.execute(sqlFLOORS);
             stmt.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.out.println("Table operation Failed");
         }
     }
 }

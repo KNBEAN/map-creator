@@ -22,6 +22,7 @@ public class Node implements data.model.INode {
         this.x = x;
         this.y = y;
         this.floor = floor;
+        this.locationID = -1;
     }
 
     public Node(int id,  int x, int y,int floor, int locationID) {

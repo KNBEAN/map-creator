@@ -5,10 +5,24 @@ public class Floor implements data.model.IFloor {
     private int floorNumber;
     private String floorName;
 
-    public Floor(int floor, String floorName){
-        this.floorNumber = floor;
+    public Floor(int floorNumber, String floorName) {
+        this.floorNumber = floorNumber;
         this.floorName = floorName;
+        this.imagePath = null;
     }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    private String imagePath;
+
+    public Floor(int floorNumber, String floorName, String imagePath) {
+        this.floorNumber = floorNumber;
+        this.floorName = floorName;
+        this.imagePath = imagePath;
+    }
+
 
     @Override
     public int getFloors() {
@@ -20,5 +34,17 @@ public class Floor implements data.model.IFloor {
         return floorName;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() == Floor.class){
+            obj = (Floor) obj;
+            if (((Floor) obj).getFloors()==floorNumber && ((Floor) obj).getFloorName().equals(floorName)) return true;
+        }
+        return false;
+    }
+
+    public String getFloorName() {
+        return floorName;
+    }
 
 }

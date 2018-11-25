@@ -19,6 +19,12 @@ public class Location implements data.model.ILocation {
         this.name = name;
     }
 
+    public Location(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
     @Override
     public int getId() {
         return id;
@@ -39,5 +45,14 @@ public class Location implements data.model.ILocation {
         return " ID: " + id + "\n" +
                 " Name: " + name + "\n" +
                 " Description: " + description;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() == Location.class){
+            obj = (Location) obj;
+            if (((Location) obj).getId()==id && ((Location) obj).getName().equals(name)) return true;
+        }
+        return false;
     }
 }

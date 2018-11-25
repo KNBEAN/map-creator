@@ -32,7 +32,7 @@ class EdgeDAOImpTest {
     private Edge edge1;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         DatabaseManager.createNewDatabase();
     }
 
@@ -44,23 +44,23 @@ class EdgeDAOImpTest {
         nodeDAO = new NodeDAOImp();
         floorDAO = new FloorDAOImp();
         locationDAO = new LocationDAOImp();
-        floorDAO.insert(floor1 = new Floor(1,"1"));
-        locationDAO.insert(location1 = new Location(-1,"1",null));
-        nodeDAO.insert(node1=new Node(1,1,1));
-        nodeDAO.insert(node2=new Node(2,2,1));
-        edge1 = new Edge(node1.getId(),node2.getId(),100);
+        floorDAO.insert(floor1 = new Floor(1, "1"));
+        locationDAO.insert(location1 = new Location(-1, "1", null));
+        nodeDAO.insert(node1 = new Node(1, 1, 1));
+        nodeDAO.insert(node2 = new Node(2, 2, 1));
+        edge1 = new Edge(node1.getId(), node2.getId(), 100);
         edgeDAO.insert(edge1);
     }
 
 
     @Test
     void shouldGetEdge() {
-        assertEquals(edge1,edgeDAO.getEdge(edge1.getId()));
+        assertEquals(edge1, edgeDAO.getEdge(edge1.getId()));
     }
 
     @Test
     void shouldDeleteEdgeAndHisSwapCopy() {
-        edgeDAO.delete(node1.getId(),node2.getId());
+        edgeDAO.delete(node1.getId(), node2.getId());
         assertNull(edgeDAO.getEdge(edge1.getId()));
         assertTrue(edgeDAO.getAllEdges().isEmpty());
     }
@@ -68,53 +68,56 @@ class EdgeDAOImpTest {
     @Test
     void shouldUpdateEdge() {
         Node node3;
-        nodeDAO.insert(node3=new Node(3,3,1));
-        edge1 = new Edge(edge1.getId(),node3.getId(),node2.getId(),200);
+        nodeDAO.insert(node3 = new Node(3, 3, 1));
+        edge1 = new Edge(edge1.getId(), node3.getId(), node2.getId(), 200);
         edgeDAO.update(edge1);
-        assertEquals(edge1,edgeDAO.getEdge(edge1.getId()));
+        assertEquals(edge1, edgeDAO.getEdge(edge1.getId()));
     }
 
     @Test
     void shouldReturnAllEdgesList() {
         Node node3;
-        nodeDAO.insert(node3=new Node(3,3,1));
+        nodeDAO.insert(node3 = new Node(3, 3, 1));
         Node node4;
-        nodeDAO.insert(node4=new Node(4,4,1));
-      Edge edge1 = new Edge(node3.getId(),node4.getId(),300);
-      Edge edge2 = new Edge(node4.getId(),node1.getId(),400);
-      edgeDAO.insert(edge1);
-      edgeDAO.insert(edge2);
-      List<Edge> edges = edgeDAO.getAllEdges();
-      assertTrue(edges.contains(edge1));
-      assertTrue(edges.contains(edge2));
-      assertEquals(6,edges.size());
+        nodeDAO.insert(node4 = new Node(4, 4, 1));
+        Edge edge1 = new Edge(node3.getId(), node4.getId(), 300);
+        Edge edge2 = new Edge(node4.getId(), node1.getId(), 400);
+        edgeDAO.insert(edge1);
+        edgeDAO.insert(edge2);
+        List<Edge> edges = edgeDAO.getAllEdges();
+        assertTrue(edges.contains(edge1));
+        assertTrue(edges.contains(edge2));
+        assertEquals(6, edges.size());
     }
 
     @Test
     void shouldReturnAllEdgesOnFloor() {
-        floorDAO.insert(new Floor(2,"2"));
+        floorDAO.insert(new Floor(2, "2"));
         Node node3;
-        nodeDAO.insert(node3=new Node(3,3,2));
+        nodeDAO.insert(node3 = new Node(3, 3, 2));
         Node node4;
-        nodeDAO.insert(node4=new Node(4,4,2));
-        Edge edge1 = new Edge(node3.getId(),node4.getId(),300);
-        Edge edge2 = new Edge(node4.getId(),node1.getId(),400);
+        nodeDAO.insert(node4 = new Node(4, 4, 2));
+        Edge edge1 = new Edge(node3.getId(), node4.getId(), 300);
+        Edge edge2 = new Edge(node4.getId(), node1.getId(), 400);
         edgeDAO.insert(edge1);
         edgeDAO.insert(edge2);
-        assertEquals(4,edgeDAO.getAllEdgesOnFloor(1).size());
-        assertEquals(4,edgeDAO.getAllEdgesOnFloor(2).size());
+        assertEquals(4, edgeDAO.getAllEdgesOnFloor(1).size());
+        assertEquals(4, edgeDAO.getAllEdgesOnFloor(2).size());
     }
 
     @Test
     void shouldInsertAllEdges() {
-        floorDAO.insert(new Floor(2,"2"));
+        floorDAO.insert(new Floor(2, "2"));
         Node node3;
-        nodeDAO.insert(node3=new Node(3,3,2));
+        nodeDAO.insert(node3 = new Node(3, 3, 2));
         Node node4;
-        nodeDAO.insert(node4=new Node(4,4,2));
-        Edge edge1 = new Edge(node3.getId(),node4.getId(),300);
-        Edge edge2 = new Edge(node4.getId(),node1.getId(),400);
-        List<Edge> edges = new ArrayList<Edge>(){{add(edge1);add(edge2);}};
+        nodeDAO.insert(node4 = new Node(4, 4, 2));
+        Edge edge1 = new Edge(node3.getId(), node4.getId(), 300);
+        Edge edge2 = new Edge(node4.getId(), node1.getId(), 400);
+        List<Edge> edges = new ArrayList<Edge>() {{
+            add(edge1);
+            add(edge2);
+        }};
         edgeDAO.insert(edges);
         edges = edgeDAO.getAllEdges();
         assertTrue(edges.contains(edge1));

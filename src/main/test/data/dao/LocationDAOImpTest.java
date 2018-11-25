@@ -25,7 +25,7 @@ class LocationDAOImpTest {
     private Location location2;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         DatabaseManager.createNewDatabase();
     }
 
@@ -44,13 +44,13 @@ class LocationDAOImpTest {
 
 
     @Test
-    void shouldGetLocation(){
-        assertEquals(location1,locationDAO.getLocation(location1.getId()));
-        assertEquals(location2,locationDAO.getLocation(location2.getId()));
+    void shouldGetLocation() {
+        assertEquals(location1, locationDAO.getLocation(location1.getId()));
+        assertEquals(location2, locationDAO.getLocation(location2.getId()));
     }
 
     @Test
-    void shouldDeleteLocation(){
+    void shouldDeleteLocation() {
 
         locationDAO.delete(location1.getId());
         locationDAO.delete(location2.getId());
@@ -61,32 +61,32 @@ class LocationDAOImpTest {
     @Test
     void shouldGetAllLocations() {
         List<Location> locations = locationDAO.getAllLocations();
-        assertEquals(location1,locations.get(0));
-        assertEquals(location2,locations.get(1));
+        assertEquals(location1, locations.get(0));
+        assertEquals(location2, locations.get(1));
     }
 
     @Test
-    void shouldGetAllLocationsOnFloor(){
+    void shouldGetAllLocationsOnFloor() {
         Location location1 = new Location("location1");
         Location location2 = new Location("location2");
         Location location3 = new Location("location3");
-        Floor floor1 = new Floor(1,"floor1",null);
-        Floor floor2 = new Floor(2,"floor2",null);
+        Floor floor1 = new Floor(1, "floor1", null);
+        Floor floor2 = new Floor(2, "floor2", null);
         locationDAO.insert(location1);
         locationDAO.insert(location2);
         locationDAO.insert(location3);
         floorDAO.insert(floor1);
         floorDAO.insert(floor2);
-        Node node1 = new Node(3,1,1,location1.getId());
-        Node node2 = new Node(4,1,2,location2.getId());
-        Node node3 = new Node(5,1,2,location3.getId());
+        Node node1 = new Node(3, 1, 1, location1.getId());
+        Node node2 = new Node(4, 1, 2, location2.getId());
+        Node node3 = new Node(5, 1, 2, location3.getId());
         nodeDAO.insert(node1);
         nodeDAO.insert(node2);
         nodeDAO.insert(node3);
         List<Location> locations1 = locationDAO.getAllLocationsOnFloor(floor1.getFloors());
         List<Location> locations2 = locationDAO.getAllLocationsOnFloor(floor2.getFloors());
-        assertEquals(1,locations1.size());
-        assertEquals(2,locations2.size());
+        assertEquals(1, locations1.size());
+        assertEquals(2, locations2.size());
     }
 
     @Test

@@ -19,4 +19,9 @@ public interface IFloor {
      */
     String floorName(int floor);
 
+    /**
+     * @return Path to image that represent floor in app
+     */
+    String getImagePath();
+
 }

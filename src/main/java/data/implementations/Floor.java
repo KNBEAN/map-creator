@@ -11,6 +11,7 @@ public class Floor implements data.model.IFloor {
         this.imagePath = null;
     }
 
+    @Override
     public String getImagePath() {
         return imagePath;
     }

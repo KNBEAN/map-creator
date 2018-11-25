@@ -13,10 +13,10 @@ public class NodeDAOImp implements NodeDAO {
     @Override
     public void insert(List<Node> nodes) {
         String sql = "INSERT INTO nodes(id,x,y,floor,location_id) VALUES(?,?,?,?,?)";
-        try( Connection connection = DatabaseManager.connect();
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            for (Node node:nodes) {
-                wrapNodeInPreparedStatement(pstmt, node);
+        try (Connection connection = DatabaseManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            for (Node node : nodes) {
+                wrapNodeInPreparedStatement(preparedStatement, node);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -35,10 +35,10 @@ public class NodeDAOImp implements NodeDAO {
     @Override
     public Node getNode(int id) {
         String sql = "SELECT id,x,y,floor,location_id FROM nodes WHERE id = ?";
-        try( Connection connection = DatabaseManager.connect();
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1,id);
-            ResultSet resultSet = pstmt.executeQuery();
+        try (Connection connection = DatabaseManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
             return wrapInNode(resultSet);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -48,13 +48,13 @@ public class NodeDAOImp implements NodeDAO {
 
     private Node wrapInNode(ResultSet resultSet) throws SQLException {
         Node node = null;
-        while (resultSet.next()){
+        while (resultSet.next()) {
             node = new Node(
-                     resultSet.getInt("id")
-                    ,resultSet.getInt("x")
-                    ,resultSet.getInt("y")
-                    ,resultSet.getInt("floor")
-                    ,resultSet.getInt("location_id"));
+                    resultSet.getInt("id")
+                    , resultSet.getInt("x")
+                    , resultSet.getInt("y")
+                    , resultSet.getInt("floor")
+                    , resultSet.getInt("location_id"));
         }
         resultSet.close();
         return node;
@@ -63,13 +63,13 @@ public class NodeDAOImp implements NodeDAO {
     private List<Node> wrapInNodes(ResultSet resultSet) throws SQLException {
         List<Node> nodes = new ArrayList<>();
         Node node = null;
-        while (resultSet.next()){
+        while (resultSet.next()) {
             node = new Node(
                     resultSet.getInt("id")
-                    ,resultSet.getInt("x")
-                    ,resultSet.getInt("y")
-                    ,resultSet.getInt("floor")
-                    ,resultSet.getInt("location_id"));
+                    , resultSet.getInt("x")
+                    , resultSet.getInt("y")
+                    , resultSet.getInt("floor")
+                    , resultSet.getInt("location_id"));
             nodes.add(node);
         }
         return nodes;
@@ -77,22 +77,22 @@ public class NodeDAOImp implements NodeDAO {
 
     @Override
     public void insert(Node node) {
-            String sql = "INSERT INTO nodes(id,x,y,floor,location_id) VALUES(?,?,?,?,?)";
-            try( Connection connection = DatabaseManager.connect();
-                 PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                wrapNodeInPreparedStatement(pstmt, node);
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
+        String sql = "INSERT INTO nodes(id,x,y,floor,location_id) VALUES(?,?,?,?,?)";
+        try (Connection connection = DatabaseManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            wrapNodeInPreparedStatement(preparedStatement, node);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM nodes WHERE id = ?";
         try (Connection connection = DatabaseManager.connect();
-            PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1,id);
-            pstmt.executeUpdate();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -101,14 +101,14 @@ public class NodeDAOImp implements NodeDAO {
     @Override
     public void update(Node node) {
         String sql = "UPDATE nodes SET x = ? , y =?,floor=?,location_id=? WHERE id=?";
-        try (   Connection connection = DatabaseManager.connect();
-                PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1,node.getX());
-            pstmt.setInt(2,node.getY());
-            pstmt.setInt(3,node.getFloor());
-            pstmt.setInt(4,node.getLocationID());
-            pstmt.setInt(5,node.getId());
-            pstmt.executeUpdate();
+        try (Connection connection = DatabaseManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, node.getX());
+            preparedStatement.setInt(2, node.getY());
+            preparedStatement.setInt(3, node.getFloor());
+            preparedStatement.setInt(4, node.getLocationID());
+            preparedStatement.setInt(5, node.getId());
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -117,9 +117,9 @@ public class NodeDAOImp implements NodeDAO {
     @Override
     public List<Node> getAllNodes() {
         String sql = "SELECT id, x, y,floor,location_id FROM nodes";
-        try(Connection connection = DatabaseManager.connect();
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sql)){
+        try (Connection connection = DatabaseManager.connect();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
             return wrapInNodes(resultSet);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -130,10 +130,10 @@ public class NodeDAOImp implements NodeDAO {
     @Override
     public List<Node> getAllNodesOnFloor(int floor) {
         String sql = "SELECT id, x, y,floor,location_id FROM nodes WHERE floor = ?";
-        try(Connection connection = DatabaseManager.connect();
-            PreparedStatement pstmt = connection.prepareStatement(sql)){
-            pstmt.setInt(1,floor);
-            ResultSet resultSet = pstmt.executeQuery();
+        try (Connection connection = DatabaseManager.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, floor);
+            ResultSet resultSet = preparedStatement.executeQuery();
             return wrapInNodes(resultSet);
         } catch (SQLException e) {
             System.out.println(e.getMessage());

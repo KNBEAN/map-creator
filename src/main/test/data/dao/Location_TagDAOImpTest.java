@@ -30,7 +30,7 @@ class Location_TagDAOImpTest {
     private Location_Tag location_tag2;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         DatabaseManager.createNewDatabase();
     }
 
@@ -45,8 +45,8 @@ class Location_TagDAOImpTest {
         location2 = new Location("2");
         locationDAO.insert(location1);
         locationDAO.insert(location2);
-        location_tag1 = new Location_Tag("tag1",location1.getId());
-        location_tag2 = new Location_Tag("tag2",location2.getId());
+        location_tag1 = new Location_Tag("tag1", location1.getId());
+        location_tag2 = new Location_Tag("tag2", location2.getId());
         location_tagDAO.insert(location_tag1);
         location_tagDAO.insert(location_tag2);
     }
@@ -75,14 +75,14 @@ class Location_TagDAOImpTest {
 
     @Test
     void shouldGetAllLocation_TagsOnFloor() {
-        floorDAO.insert(new Floor(1,"1",null));
-        floorDAO.insert(new Floor(2,"2",null));
-        Location_Tag location_tag3= new Location_Tag("3",location2.getId());
+        floorDAO.insert(new Floor(1, "1", null));
+        floorDAO.insert(new Floor(2, "2", null));
+        Location_Tag location_tag3 = new Location_Tag("3", location2.getId());
         location_tagDAO.insert(location_tag3);
         nodeDAO = new NodeDAOImp();
-        Node node1 = new Node(1,1,1,location1.getId());
-        Node node2 = new Node(1,1,2,location2.getId());
-        Node node3 = new Node(1,2,2,location2.getId());
+        Node node1 = new Node(1, 1, 1, location1.getId());
+        Node node2 = new Node(1, 1, 2, location2.getId());
+        Node node3 = new Node(1, 2, 2, location2.getId());
         nodeDAO.insert(node1);
         nodeDAO.insert(node2);
         nodeDAO.insert(node3);
@@ -94,14 +94,15 @@ class Location_TagDAOImpTest {
     }
 
     @Test
-    void shouldInsertAllLocationTags(){
-        Location_Tag location_tag3= new Location_Tag("4",location2.getId());
-        Location_Tag location_tag4= new Location_Tag("5",location2.getId());
-        Location_Tag location_tag5= new Location_Tag("6",location1.getId());
-        List<Location_Tag> location_tags1 = new ArrayList<Location_Tag>(){{
+    void shouldInsertAllLocationTags() {
+        Location_Tag location_tag3 = new Location_Tag("4", location2.getId());
+        Location_Tag location_tag4 = new Location_Tag("5", location2.getId());
+        Location_Tag location_tag5 = new Location_Tag("6", location1.getId());
+        List<Location_Tag> location_tags1 = new ArrayList<Location_Tag>() {{
             add(location_tag3);
             add(location_tag4);
-            add(location_tag5);}};
+            add(location_tag5);
+        }};
         location_tagDAO.insert(location_tags1);
         List<Location_Tag> location_tags2 = location_tagDAO.getAllLocations_Tag();
         assertTrue(location_tags2.contains(location_tag3));

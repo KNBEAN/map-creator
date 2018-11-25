@@ -24,7 +24,7 @@ class nodeDAOImpTest {
     Node node;
 
     @BeforeAll
-    static void createBase(){
+    static void createBase() {
         DatabaseManager.createNewDatabase();
     }
 
@@ -35,16 +35,16 @@ class nodeDAOImpTest {
         nodeDAO = new NodeDAOImp();
         floorDAO = new FloorDAOImp();
         locationDAO = new LocationDAOImp();
-        floorDAO.insert(new Floor(1,"1"));
-        locationDAO.insert(new Location(-1,"null",null));
-        node = new Node(1,1,1);
+        floorDAO.insert(new Floor(1, "1"));
+        locationDAO.insert(new Location(-1, "null", null));
+        node = new Node(1, 1, 1);
         nodeDAO.insert(node);
     }
 
 
     @Test
-    void shouldGetProperNode(){
-        assertEquals(node,nodeDAO.getNode(node.getId()));
+    void shouldGetProperNode() {
+        assertEquals(node, nodeDAO.getNode(node.getId()));
     }
 
     @Test
@@ -54,16 +54,16 @@ class nodeDAOImpTest {
     }
 
     @Test
-    void shouldUpdateNode(){
-        Node updatedNode = new Node(node.getId(),1,1,1,-1);
+    void shouldUpdateNode() {
+        Node updatedNode = new Node(node.getId(), 1, 1, 1, -1);
         nodeDAO.update(updatedNode);
-        assertEquals(updatedNode,nodeDAO.getNode(updatedNode.getId()));
+        assertEquals(updatedNode, nodeDAO.getNode(updatedNode.getId()));
     }
 
     @Test
-    void shouldGetAllNodes(){
-        Node sampleNode = new Node(6,6,1);
-        Node sampleNode2 = new Node(7,7,1);
+    void shouldGetAllNodes() {
+        Node sampleNode = new Node(6, 6, 1);
+        Node sampleNode2 = new Node(7, 7, 1);
         nodeDAO.insert(sampleNode);
         nodeDAO.insert(sampleNode2);
         List<Node> nodes = nodeDAO.getAllNodes();
@@ -74,15 +74,15 @@ class nodeDAOImpTest {
 
     @Test
     void shouldGetAllNodesOnFloor() {
-        Node sampleNode = new Node(6,6,1);
-        Node sampleNode2 = new Node(7,7,1);
-        Node sampleNode3 = new Node(8,7,1);
+        Node sampleNode = new Node(6, 6, 1);
+        Node sampleNode2 = new Node(7, 7, 1);
+        Node sampleNode3 = new Node(8, 7, 1);
         nodeDAO.insert(sampleNode);
         nodeDAO.insert(sampleNode2);
         nodeDAO.insert(sampleNode3);
         List<Node> nodes = nodeDAO.getAllNodesOnFloor(1);
-        for (Node node:nodes){
-            assertEquals(1,node.getFloor());
+        for (Node node : nodes) {
+            assertEquals(1, node.getFloor());
         }
         assertTrue(nodes.contains(sampleNode2));
         assertTrue(nodes.contains(sampleNode3));
@@ -91,13 +91,14 @@ class nodeDAOImpTest {
 
     @Test
     void shouldInsertAllNodes() {
-        Node sampleNode = new Node(6,6,1);
-        Node sampleNode2 = new Node(7,7,1);
-        Node sampleNode3 = new Node(8,7,1);
-        List<Node> nodes1 = new ArrayList<Node>(){{
+        Node sampleNode = new Node(6, 6, 1);
+        Node sampleNode2 = new Node(7, 7, 1);
+        Node sampleNode3 = new Node(8, 7, 1);
+        List<Node> nodes1 = new ArrayList<Node>() {{
             add(sampleNode);
             add(sampleNode2);
-            add(sampleNode3);}};
+            add(sampleNode3);
+        }};
         nodeDAO.insert(nodes1);
         nodes1 = nodeDAO.getAllNodes();
         assertTrue(nodes1.contains(sampleNode));

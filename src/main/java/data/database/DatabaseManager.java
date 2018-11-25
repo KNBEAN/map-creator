@@ -10,6 +10,10 @@ public class DatabaseManager {
     private static final String DATABASE_NAME = "data.db";
     private static  SQLiteConfig sqliteConfig = null;
 
+    /**
+     * Creates new database with foreign keys enhancement.
+     * Needed for SQLiteConfig initialization.
+     */
     public static void createNewDatabase() {
         sqliteConfig = new SQLiteConfig();
         sqliteConfig.enforceForeignKeys(true);
@@ -33,6 +37,10 @@ public class DatabaseManager {
         createTables();
     }
 
+    /**
+     * Create new connection for DAO
+     * @return connection
+     */
     public static Connection connect() {
         String url = "jdbc:sqlite:data.db";
         try {
@@ -41,16 +49,14 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             createNewDatabase();
-        } finally {
-            try {
-                connection = DriverManager.getConnection(url, sqliteConfig.toProperties());
-                System.out.println("Connection to SQLite has been established");
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-            return connection;
         }
+        return connection;
     }
+
+    /**
+     * Creates tables if not exist. Tables are connected by foreign keys. For detailed info look on
+     * https://github.com/KNBEAN/map-creator/wiki
+     */
     public static void createTables(){
 
         String sqlNODES = "CREATE TABLE IF NOT EXISTS nodes (\n" +
@@ -83,6 +89,9 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Deletes all tables. Use carefully.
+     */
     public static void dropTables(){
         String sqlNODES = "DROP TABLE nodes;";
         String sqlFLOORS= "DROP TABLE floors;";
@@ -95,17 +104,17 @@ public class DatabaseManager {
 
     private static void executeTableStatements(String sqlNODES, String sqlFLOORS, String sqlLOCATIONS, String sqlLOCATION_TAGS, String sqlEDGES) {
         try (Connection connection = connect()) {
-            Statement stmt = connection.createStatement();
-            stmt.execute(sqlEDGES);
-            stmt = connection.createStatement();
-            stmt.execute(sqlLOCATION_TAGS);
-            stmt = connection.createStatement();
-            stmt.execute(sqlNODES);
-            stmt = connection.createStatement();
-            stmt.execute(sqlLOCATIONS);
-            stmt = connection.createStatement();
-            stmt.execute(sqlFLOORS);
-            stmt.close();
+            Statement statement = connection.createStatement();
+            statement.execute(sqlEDGES);
+            statement = connection.createStatement();
+            statement.execute(sqlLOCATION_TAGS);
+            statement = connection.createStatement();
+            statement.execute(sqlNODES);
+            statement = connection.createStatement();
+            statement.execute(sqlLOCATIONS);
+            statement = connection.createStatement();
+            statement.execute(sqlFLOORS);
+            statement.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             System.out.println("Table operation Failed");

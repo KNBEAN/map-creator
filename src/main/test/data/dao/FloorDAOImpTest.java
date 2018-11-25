@@ -16,7 +16,7 @@ class FloorDAOImpTest {
     Floor floor1;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         DatabaseManager.createNewDatabase();
     }
 
@@ -25,13 +25,13 @@ class FloorDAOImpTest {
         floorDAO = new FloorDAOImp();
         DatabaseManager.dropTables();
         DatabaseManager.createTables();
-        floor1 = new Floor(1,"1",null);
+        floor1 = new Floor(1, "1", null);
         floorDAO.insert(floor1);
     }
 
     @Test
-    void shouldGetInsertedFloor(){
-        assertEquals(floor1,floorDAO.getFloor(1));
+    void shouldGetInsertedFloor() {
+        assertEquals(floor1, floorDAO.getFloor(1));
     }
 
     @Test
@@ -41,15 +41,15 @@ class FloorDAOImpTest {
     }
 
     @Test
-    void shouldUpdateFloor(){
-        floor1 = new Floor(1,"2","new image path");
+    void shouldUpdateFloor() {
+        floor1 = new Floor(1, "2", "new image path");
         floorDAO.update(floor1);
-        assertEquals(floor1,floorDAO.getFloor(1));
+        assertEquals(floor1, floorDAO.getFloor(1));
     }
 
     @Test
     void shouldGetAllFloors() {
-        Floor floor2 = new Floor(2,"2",null);
+        Floor floor2 = new Floor(2, "2", null);
         floorDAO.insert(floor2);
         List<Floor> floors = floorDAO.getAllFloors();
         assertTrue(floors.contains(floor2));

@@ -2,7 +2,7 @@ package data.implementations;
 
 import data.Id_Generator;
 
-public class Node implements data.model.INode {
+public class Node implements data.model.Node {
 
     private int id;
     private int floor;

@@ -3,7 +3,7 @@ package data.model;
 /**
  *  This interface represents a table of floor in given building
  */
-public interface IFloor {
+public interface Floor {
 
     /**
      * Show how many floors is in building

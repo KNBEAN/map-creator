@@ -12,7 +12,7 @@ public class EdgeDAOImp implements EdgeDAO {
 
     @Override
     public Edge getEdge(int id) {
-        String sql = "SELECT id,[from],[to],[length] FROM edges WHERE id = ?";
+        String sql = "SELECT * FROM edges WHERE id = ?";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -143,7 +143,7 @@ public class EdgeDAOImp implements EdgeDAO {
 
     @Override
     public List<Edge> getAllEdges() {
-        String sql = "SELECT id, [from], [to],[length] FROM edges";
+        String sql = "SELECT * FROM edges";
         try (Connection connection = DatabaseManager.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
@@ -156,7 +156,7 @@ public class EdgeDAOImp implements EdgeDAO {
 
     @Override
     public List<Edge> getAllEdgesOnFloor(int floor) {
-        String sql = "SELECT id, [from], [to],[length] FROM edges WHERE [from] IN (SELECT id FROM nodes WHERE floor =?)" +
+        String sql = "SELECT * FROM edges WHERE [from] IN (SELECT id FROM nodes WHERE floor =?)" +
                 " or [to] IN (SELECT id FROM nodes WHERE floor =?)";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

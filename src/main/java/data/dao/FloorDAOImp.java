@@ -12,7 +12,7 @@ public class FloorDAOImp implements FloorDAO {
 
     @Override
     public Floor getFloor(int floor) {
-        String sql = "SELECT floor,name,imagePath FROM floors WHERE floor = ?";
+        String sql = "SELECT * FROM floors WHERE floor = ?";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, floor);
@@ -78,7 +78,7 @@ public class FloorDAOImp implements FloorDAO {
 
     @Override
     public List<Floor> getAllFloors() {
-        String sql = "SELECT floor,name,imagePath FROM floors";
+        String sql = "SELECT * FROM floors";
         try (Connection connection = DatabaseManager.connect();
              Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(sql);

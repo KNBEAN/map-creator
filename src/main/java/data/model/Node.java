@@ -1,6 +1,6 @@
 package data.model;
 
-public interface INode {
+public interface Node {
     /**
      * Returns unique ID of point of the map
      * @return ID

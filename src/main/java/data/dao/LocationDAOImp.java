@@ -28,7 +28,7 @@ public class LocationDAOImp implements LocationDAO {
 
     @Override
     public Location getLocation(int id) {
-        String sql = "SELECT id,name,description FROM locations WHERE id = ?";
+        String sql = "SELECT * FROM locations WHERE id = ?";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -108,7 +108,7 @@ public class LocationDAOImp implements LocationDAO {
 
     @Override
     public List<Location> getAllLocations() {
-        String sql = "SELECT id, name,description FROM locations";
+        String sql = "SELECT * FROM locations";
         try (Connection connection = DatabaseManager.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
@@ -121,7 +121,7 @@ public class LocationDAOImp implements LocationDAO {
 
     @Override
     public List<Location> getAllLocationsOnFloor(int floor) {
-        String sql = "SELECT id,name,description FROM locations WHERE id in (select location_id FROM nodes WHERE floor=?)";
+        String sql = "SELECT * FROM locations WHERE id in (select location_id FROM nodes WHERE floor=?)";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, floor);

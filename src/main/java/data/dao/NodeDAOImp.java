@@ -34,7 +34,7 @@ public class NodeDAOImp implements NodeDAO {
 
     @Override
     public Node getNode(int id) {
-        String sql = "SELECT id,x,y,floor,location_id FROM nodes WHERE id = ?";
+        String sql = "SELECT * FROM nodes WHERE id = ?";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -116,7 +116,7 @@ public class NodeDAOImp implements NodeDAO {
 
     @Override
     public List<Node> getAllNodes() {
-        String sql = "SELECT id, x, y,floor,location_id FROM nodes";
+        String sql = "SELECT * FROM nodes";
         try (Connection connection = DatabaseManager.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
@@ -129,7 +129,7 @@ public class NodeDAOImp implements NodeDAO {
 
     @Override
     public List<Node> getAllNodesOnFloor(int floor) {
-        String sql = "SELECT id, x, y,floor,location_id FROM nodes WHERE floor = ?";
+        String sql = "SELECT * FROM nodes WHERE floor = ?";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, floor);

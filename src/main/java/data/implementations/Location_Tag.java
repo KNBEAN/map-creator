@@ -1,6 +1,6 @@
 package data.implementations;
 
-public class Location_Tag implements data.model.ILocation_Tag {
+public class Location_Tag implements data.model.Location_Tag {
     private int locationId;
     private String tag;
 

@@ -1,7 +1,7 @@
 package data.implementations;
 
 
-public class Floor implements data.model.IFloor {
+public class Floor implements data.model.Floor {
     private int floorNumber;
     private String floorName;
 
@@ -10,6 +10,8 @@ public class Floor implements data.model.IFloor {
         this.floorName = floorName;
         this.imagePath = null;
     }
+
+
 
     @Override
     public String getImagePath() {

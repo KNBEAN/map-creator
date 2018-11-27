@@ -4,14 +4,14 @@ package data.model;
  * This interface represents directional edge on the graph. Edge is a object that make connection
  * between nodes.
  */
-public interface IEdge {
+public interface Edge {
 
     /**
      * Calculate length between node with from_id to node with
      * to_id
      * @return
      */
-    int calculateLength(INode from, INode to);
+    int calculateLength(Node from, Node to);
 
 
     /**
@@ -38,6 +38,6 @@ public interface IEdge {
      */
     int getLength();
 
-    IEdge swapEnds();
+    Edge swapEnds();
 
 }

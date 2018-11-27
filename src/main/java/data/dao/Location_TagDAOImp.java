@@ -27,7 +27,7 @@ public class Location_TagDAOImp implements Location_TagDAO {
 
     @Override
     public List<Location_Tag> getLocation_Tags(int location_id) {
-        String sql = "SELECT tag,location_id FROM location_tags WHERE location_id = ?";
+        String sql = "SELECT * FROM location_tags WHERE location_id = ?";
         return getLocation_tags(location_id, sql);
     }
 
@@ -84,7 +84,7 @@ public class Location_TagDAOImp implements Location_TagDAO {
 
     @Override
     public List<Location_Tag> getAllLocations_Tag() {
-        String sql = "SELECT tag,location_id FROM location_tags";
+        String sql = "SELECT * FROM location_tags";
         try (Connection connection = DatabaseManager.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
@@ -97,7 +97,7 @@ public class Location_TagDAOImp implements Location_TagDAO {
 
     @Override
     public List<Location_Tag> getAllLocations_TagsOnFloor(int floor) {
-        String sql = "SELECT tag,location_id FROM location_tags WHERE location_id in (select location_id FROM nodes WHERE floor=?)";
+        String sql = "SELECT * FROM location_tags WHERE location_id in (select location_id FROM nodes WHERE floor=?)";
         return getLocation_tags(floor, sql);
     }
 

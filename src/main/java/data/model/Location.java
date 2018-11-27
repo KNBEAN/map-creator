@@ -7,7 +7,7 @@ import com.sun.istack.internal.Nullable;
  * for ex. room, lobby or coffee shop ect.
  */
 
-public interface ILocation {
+public interface Location {
 
 
 

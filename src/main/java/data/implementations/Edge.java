@@ -1,16 +1,16 @@
 package data.implementations;
 
 import data.Id_Generator;
-import data.model.INode;
+import data.model.Node;
 
-public class Edge implements data.model.IEdge {
+public class Edge implements data.model.Edge {
 
     private int id;
     private int from;
     private int to;
     private int length;
 
-    public Edge(Node from_Node, Node to_Node){
+    public Edge(data.implementations.Node from_Node, data.implementations.Node to_Node){
         id = Id_Generator.getId();
         this.from = from_Node.getId();
         this.to = to_Node.getId();
@@ -32,7 +32,7 @@ public class Edge implements data.model.IEdge {
     }
 
     @Override
-    public int calculateLength(INode from, INode to) {
+    public int calculateLength(Node from, Node to) {
         return (int) Math.sqrt(Math.pow((double)from.getX()-to.getX(),2)
                 + Math.pow((double)from.getY()-to.getY(),2));
     }

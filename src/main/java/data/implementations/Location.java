@@ -2,7 +2,7 @@ package data.implementations;
 
 import data.Id_Generator;
 
-public class Location implements data.model.ILocation {
+public class Location implements data.model.Location {
 
     private int id;
     private String name;

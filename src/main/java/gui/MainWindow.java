@@ -42,11 +42,6 @@ public class MainWindow extends JFrame {
     private JScrollPane scrollMap;
     private JPanel scalePanel;
 
-    private EdgeArray edgeCollection = new EdgeArray();
-    private NodeArray nodeCollection = new NodeArray();
-    private FloorArray floorCollection = new FloorArray();
-    private LocationArray locationCollection = new LocationArray();
-    private Location_TagArray locationTagCollection = new Location_TagArray();
 
     private DefaultListModel<Node> nodesListModel;
     private DefaultListModel<Location> locationsListModel;
@@ -138,8 +133,6 @@ public class MainWindow extends JFrame {
             if (result == JFileChooser.APPROVE_OPTION) {
                 String folderPath = chooser.getSelectedFile().getPath();
 
-                loadJsonsFromFolder(folderPath);
-                loadCollectionsToListModel();
 
             } else
                 System.out.println("Open command cancelled by user");
@@ -159,60 +152,19 @@ public class MainWindow extends JFrame {
 
     private void loadCollectionsToListModel() {
 
-        for (int i = 0; i < nodeCollection.getArrayList().size(); i++) {
-            nodesListModel.add(i, nodeCollection.getArrayList().get(i));
-        }
 
-        for (int i = 0; i < edgeCollection.getArrayList().size(); i++) {
-            edgesListModel.add(i, edgeCollection.getArrayList().get(i));
-        }
 
-        for (int i = 0; i < locationCollection.getArrayList().size(); i++) {
-            locationsListModel.add(i, locationCollection.getArrayList().get(i));
-        }
-
+        //   for (int i = 0; i < edgeCollection.getArrayList().size(); i++) {
+        //       edgesListModel.add(i, edgeCollection.getArrayList().get(i));
     }
 
-    private void loadJsonsFromFolder(String folderPath) {
+    //  for (int i = 0; i < locationCollection.getArrayList().size(); i++) {
+    //         locationsListModel.add(i, locationCollection.getArrayList().get(i));
+    //     }
+//
+    // }
 
-        String edgePath = folderPath + ResourceBundle.getBundle("strings").getString("json_edge");
-        String nodePath = folderPath + ResourceBundle.getBundle("strings").getString("json_node");
-        String floorPath = folderPath + ResourceBundle.getBundle("strings").getString("json_floor");
-        String locationPath = folderPath + ResourceBundle.getBundle("strings").getString("json_location");
-        String tagPath = folderPath + ResourceBundle.getBundle("strings").getString("json_tag");
 
-        try {
-            ArrayList<Edge> edges = JsonParser.getEntityArrayList(edgePath, new TypeToken<List<Edge>>() {
-            }.getType());
-            edgeCollection = (EdgeArray) addArrayToCollection(edges, edgeCollection);
-
-            ArrayList<Node> nodes = JsonParser.getEntityArrayList(nodePath, new TypeToken<List<Node>>() {
-            }.getType());
-            nodeCollection = (NodeArray) addArrayToCollection(nodes, nodeCollection);
-
-            ArrayList<Floor> floors = JsonParser.getEntityArrayList(floorPath, new TypeToken<List<Floor>>() {
-            }.getType());
-            floorCollection = (FloorArray) addArrayToCollection(floors, floorCollection);
-
-            ArrayList<Location> locations = JsonParser.getEntityArrayList(locationPath, new TypeToken<List<Location>>() {
-            }.getType());
-            locationCollection = (LocationArray) addArrayToCollection(locations, locationCollection);
-
-            ArrayList<Location_Tag> location_tags = JsonParser.getEntityArrayList(tagPath, new TypeToken<List<Location_Tag>>() {
-            }.getType());
-            locationTagCollection = (Location_TagArray) addArrayToCollection(location_tags, locationTagCollection);
-
-            JOptionPane.showMessageDialog(getParent(), ResourceBundle.getBundle("strings").getString("json_success"));
-
-        } catch (FileNotFoundException e) {
-
-            JOptionPane.showMessageDialog(getParent(),
-                    ResourceBundle.getBundle("strings").getString("json_error"),
-                    ResourceBundle.getBundle("strings").getString("error"),
-                    JOptionPane.ERROR_MESSAGE);
-        }
-
-    }
 
     private <T> HashSet<?> addArrayToCollection(ArrayList<T> entityArrayList, HashSet<Object> entityCollection) {
 
@@ -298,19 +250,19 @@ public class MainWindow extends JFrame {
         Font addNodeFont = this.$$$getFont$$$(null, Font.BOLD, 14, addNode.getFont());
         if (addNodeFont != null) addNode.setFont(addNodeFont);
         addNode.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
-        this.$$$loadButtonText$$$(addNode, ResourceBundle.getBundle("strings").getString("node"));
+        this.$$$loadButtonText$$$(addNode, ResourceBundle.getBundle("strings").getString("INode"));
         addButtonsPanel.add(addNode, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         addLocation = new JButton();
         Font addLocationFont = this.$$$getFont$$$(null, Font.BOLD, 14, addLocation.getFont());
         if (addLocationFont != null) addLocation.setFont(addLocationFont);
         addLocation.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
-        this.$$$loadButtonText$$$(addLocation, ResourceBundle.getBundle("strings").getString("location"));
+        this.$$$loadButtonText$$$(addLocation, ResourceBundle.getBundle("strings").getString("ILocation"));
         addButtonsPanel.add(addLocation, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         addEdge = new JButton();
         Font addEdgeFont = this.$$$getFont$$$(null, Font.BOLD, 14, addEdge.getFont());
         if (addEdgeFont != null) addEdge.setFont(addEdgeFont);
         addEdge.setIcon(new ImageIcon(getClass().getResource("/images/Plus_icon_small.png")));
-        this.$$$loadButtonText$$$(addEdge, ResourceBundle.getBundle("strings").getString("edge"));
+        this.$$$loadButtonText$$$(addEdge, ResourceBundle.getBundle("strings").getString("IEdge"));
         addButtonsPanel.add(addEdge, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         checkBoxesPanel = new JPanel();
         checkBoxesPanel.setLayout(new GridLayoutManager(1, 4, new Insets(0, 10, 10, 0), -1, -1));

@@ -149,7 +149,7 @@
             <properties>
               <font size="14" style="1"/>
               <icon value="images/Plus_icon_small.png"/>
-              <text resource-bundle="strings" key="node"/>
+              <text resource-bundle="strings" key="INode"/>
             </properties>
           </component>
           <component id="25005" class="javax.swing.JButton" binding="addLocation">
@@ -159,7 +159,7 @@
             <properties>
               <font size="14" style="1"/>
               <icon value="images/Plus_icon_small.png"/>
-              <text resource-bundle="strings" key="location"/>
+              <text resource-bundle="strings" key="ILocation"/>
             </properties>
           </component>
           <component id="2e238" class="javax.swing.JButton" binding="addEdge">
@@ -169,7 +169,7 @@
             <properties>
               <font size="14" style="1"/>
               <icon value="images/Plus_icon_small.png"/>
-              <text resource-bundle="strings" key="edge"/>
+              <text resource-bundle="strings" key="IEdge"/>
             </properties>
           </component>
         </children>

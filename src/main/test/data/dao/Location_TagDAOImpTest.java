@@ -31,7 +31,7 @@ class Location_TagDAOImpTest {
 
     @BeforeAll
     static void init() {
-        DatabaseManager.createNewDatabase();
+        DatabaseManager.createNewDatabase(null,true);
     }
 
     @BeforeEach

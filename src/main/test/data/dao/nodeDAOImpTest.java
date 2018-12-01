@@ -25,7 +25,7 @@ class nodeDAOImpTest {
 
     @BeforeAll
     static void createBase() {
-        DatabaseManager.createNewDatabase();
+        DatabaseManager.createNewDatabase(null,true);
     }
 
     @BeforeEach

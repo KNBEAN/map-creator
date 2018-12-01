@@ -33,7 +33,7 @@ class EdgeDAOImpTest {
 
     @BeforeAll
     static void init() {
-        DatabaseManager.createNewDatabase();
+        DatabaseManager.createNewDatabase(null,true);
     }
 
     @BeforeEach

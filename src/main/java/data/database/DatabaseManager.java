@@ -1,40 +1,63 @@
 package data.database;
 
+import jdk.nashorn.internal.runtime.Context;
 import org.sqlite.SQLiteConfig;
-
+import org.sqlite.SQLiteConnection;
 import java.sql.*;
 
 public class DatabaseManager {
 
     private static Connection connection = null;
-    private static final String DATABASE_NAME = "data.db";
+    private static final String DATABASE_DEFAULT = "data";
     private static  SQLiteConfig sqliteConfig = null;
+    private static final String DATABASE_ROOT = "jdbc:sqlite:";
+    private static final String IN_MEMORY = "memory:";
+    private static String connectedBase;
 
     /**
-     * Creates new database with foreign keys enhancement.
-     * Needed for SQLiteConfig initialization.
+     * Connect to new database with foreign keys enhancement.
+     * @param name if null, database name equals data.db
+     * @param inMemory if true, database will use in-memory (usable only for test)
      */
-    public static void createNewDatabase() {
+    public static void createNewDatabase(String name,boolean inMemory) {
         sqliteConfig = new SQLiteConfig();
         sqliteConfig.enforceForeignKeys(true);
-        String url = "jdbc:sqlite:" + DATABASE_NAME;
+        if (name == null || name.isEmpty()) name = DATABASE_DEFAULT;
+        if (inMemory) name = IN_MEMORY+ name;
+
+        String url = DATABASE_ROOT+ name;
         try {
-            connection = DriverManager.getConnection(url,sqliteConfig.toProperties());
+            connection = DriverManager.getConnection(url+".db",sqliteConfig.toProperties());
+            connectedBase = name;
+            createTables();
             System.out.println("Connection to SQLite has been established");
+            DatabaseMetaData meta = connection.getMetaData();
+            System.out.println("The driver name is" + meta.getDriverName());
+            System.out.println("New data created");
+
+            connection.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (connection != null) {
-                    DatabaseMetaData meta = connection.getMetaData();
-                    System.out.println("The driver name is" + meta.getDriverName());
-                    System.out.println("New data created");
-                }
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
         }
-        createTables();
+    }
+
+    /**
+     * Use to swap between created databases
+     * @param base if null, then switches connection to default
+     */
+    public static void swapDatabaseConnection(String base) {
+        if (base == null) {
+            connectedBase = DATABASE_DEFAULT;
+        } else {
+            connectedBase = base;
+        }
+    }
+
+    /**
+     * @return Name of base which will be accessed by connect() method
+     */
+    public static String getConnectedBase() {
+        return connectedBase;
     }
 
     /**
@@ -42,16 +65,25 @@ public class DatabaseManager {
      * @return connection
      */
     public static Connection connect() {
-        String url = "jdbc:sqlite:data.db";
+        if (sqliteConfig ==null){
+            sqliteConfig = new SQLiteConfig();
+            sqliteConfig.enforceForeignKeys(true);
+        }
+        String url=null;
+        if (connectedBase == null){
+            url = DATABASE_ROOT + "memory:null";
+        }
+        else url = DATABASE_ROOT + connectedBase;
+
         try {
-            connection = DriverManager.getConnection(url, sqliteConfig.toProperties());
+            connection = DriverManager.getConnection(url+".db", sqliteConfig.toProperties());
             System.out.println("Connection to SQLite has been established");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            createNewDatabase();
         }
         return connection;
     }
+
 
     /**
      * Creates tables if not exist. Tables are connected by foreign keys. For detailed info look on
@@ -85,7 +117,12 @@ public class DatabaseManager {
                 "length integer NOT NULL, \n" +
                 "FOREIGN KEY ([from]) REFERENCES nodes(id) ON UPDATE CASCADE ON DELETE CASCADE, \n" +
                 "FOREIGN KEY ([to]) REFERENCES nodes(id) ON UPDATE CASCADE ON DELETE CASCADE);";
-        executeTableStatements(sqlNODES, sqlFLOORS, sqlLOCATIONS, sqlLOCATION_TAGS, sqlEDGES);
+        String sqlQUICK_ACCESS_LOCATIONS = "CREATE TABLE IF NOT EXISTS quick_access_locations(\n" +
+                "id integer NOT NULL PRIMARY KEY, \n" +
+                "location_id integer NOT NULL, \n" +
+                "quick_access_type integer NOT NULL, \n"+
+                "FOREIGN KEY (location_id) REFERENCES locations(id) ON UPDATE CASCADE ON DELETE CASCADE);";
+        executeTableStatements(sqlNODES, sqlFLOORS, sqlLOCATIONS, sqlLOCATION_TAGS, sqlEDGES,sqlQUICK_ACCESS_LOCATIONS);
 
     }
 
@@ -95,14 +132,15 @@ public class DatabaseManager {
     public static void dropTables(){
         String sqlNODES = "DROP TABLE nodes;";
         String sqlFLOORS= "DROP TABLE floors;";
+        String sqlQUICK_ACCESS_LOCATION = "DROP TABLE quick_access_locations;";
         String sqlLOCATIONS = "DROP TABLE locations;";
         String sqlLOCATION_TAGS = "DROP TABLE location_tags;";
         String sqlEDGES = "DROP TABLE edges;";
-        executeTableStatements(sqlNODES, sqlFLOORS, sqlLOCATIONS, sqlLOCATION_TAGS, sqlEDGES);
+        executeTableStatements(sqlNODES, sqlFLOORS, sqlLOCATIONS, sqlLOCATION_TAGS, sqlEDGES,sqlQUICK_ACCESS_LOCATION);
 
     }
 
-    private static void executeTableStatements(String sqlNODES, String sqlFLOORS, String sqlLOCATIONS, String sqlLOCATION_TAGS, String sqlEDGES) {
+    private static void executeTableStatements(String sqlNODES, String sqlFLOORS, String sqlLOCATIONS, String sqlLOCATION_TAGS, String sqlEDGES,String  sqlQUICK_ACCESS_LOCATIONS) {
         try (Connection connection = connect()) {
             Statement statement = connection.createStatement();
             statement.execute(sqlEDGES);
@@ -114,6 +152,8 @@ public class DatabaseManager {
             statement.execute(sqlLOCATIONS);
             statement = connection.createStatement();
             statement.execute(sqlFLOORS);
+            statement = connection.createStatement();
+            statement.execute(sqlQUICK_ACCESS_LOCATIONS);
             statement.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

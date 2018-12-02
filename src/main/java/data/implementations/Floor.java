@@ -50,4 +50,8 @@ public class Floor implements data.model.Floor {
         return floorName;
     }
 
+    @Override
+    public String toString() {
+        return floorName;
+    }
 }

@@ -7,4 +7,8 @@ public abstract class Id_Generator {
         id++;
         return id;
     }
+
+    static public void setStartingID(){
+        id = 700;
+    }
 }

@@ -1,8 +1,15 @@
 package gui;
 
+import data.implementations.Location;
+import data.implementations.Node;
+import data.implementations.Edge;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class PaintPanel extends JPanel {
     private ImageIcon imageIcon;
@@ -13,6 +20,10 @@ public class PaintPanel extends JPanel {
 
     private double xRatio = 1;
     private double yRatio = 1;
+
+    private List<Edge> edgeArray;
+    private List<Node> nodeArray;
+    private List<Location> locationArray;
 
     public PaintPanel() {
         this.imageIcon = new ImageIcon();
@@ -49,6 +60,12 @@ public class PaintPanel extends JPanel {
         setPreferredSize(new Dimension(width,height));
     }
 
+    public void setGraphData(List<Edge> edgeArray, List<Node> nodeArray, List<Location> locationArray){
+        this.edgeArray = edgeArray;
+        this.nodeArray = nodeArray;
+        this.locationArray = locationArray;
+    }
+
     @Override
     public void repaint() {
         super.repaint();
@@ -61,9 +78,7 @@ public class PaintPanel extends JPanel {
         Graphics2D graphics2D = (Graphics2D) g;
 
         resizedIcon.paintIcon(this,graphics2D,0,0);
-        //sample
-        int[] coordsTable = scaleCoords(546,117,20);
-        graphics2D.fillOval(coordsTable[0],coordsTable[1],coordsTable[2],coordsTable[2]);
+
 
     }
 

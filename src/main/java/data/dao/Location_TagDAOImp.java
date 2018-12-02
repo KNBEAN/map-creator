@@ -17,7 +17,7 @@ public class Location_TagDAOImp implements Location_TagDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             for (Location_Tag location_tag : location_tags) {
                 preparedStatement.setString(1, location_tag.getTag());
-                preparedStatement.setInt(2, location_tag.getLocationId());
+                preparedStatement.setInt(2, location_tag.getLocation_id());
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -50,7 +50,7 @@ public class Location_TagDAOImp implements Location_TagDAO {
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, location_Tag.getTag());
-            preparedStatement.setInt(2, location_Tag.getLocationId());
+            preparedStatement.setInt(2, location_Tag.getLocation_id());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -74,7 +74,7 @@ public class Location_TagDAOImp implements Location_TagDAO {
         String sql = "UPDATE location_tags SET location_id = ? WHERE tag = ?";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, location_Tag.getLocationId());
+            preparedStatement.setInt(1, location_Tag.getLocation_id());
             preparedStatement.setString(2, location_Tag.getTag());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

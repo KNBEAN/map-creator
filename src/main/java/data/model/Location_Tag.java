@@ -16,6 +16,6 @@ public interface Location_Tag {
      * Get location id connected to this Location_Tag
      * @return id of location.
      */
-    int getLocationId();
+    int getLocation_id();
 
 }

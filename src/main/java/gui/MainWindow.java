@@ -13,8 +13,6 @@ import data.implementations.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,20 +112,12 @@ public class MainWindow extends JFrame {
         floorBox.addActionListener(e -> {
 
             System.out.println(((Floor) floorBox.getItemAt(floorBox.getSelectedIndex())).getImagePath());
-            //Image path from floor is just path from res, example. \images\testmap.png ;you have to type this: getClass().getResource(imagePath)
+
             selectedFloor = ((Floor) (floorBox.getSelectedItem()));
             ((PaintPanel) mapPaintPanel).setImageIcon(new ImageIcon(getClass().getResource(selectedFloor.getImagePath())));
 
+            prepareGraphDataToPaint();
             mapPaintPanel.repaint();
-
-        });
-
-        allCheckBox.addItemListener(e -> {
-            boolean isSelected = allCheckBox.isSelected();
-
-            nodesCheckBox.setSelected(isSelected);
-            locationCheckBox.setSelected(isSelected);
-            edgesCheckBox.setSelected(isSelected);
 
         });
 
@@ -152,17 +142,36 @@ public class MainWindow extends JFrame {
 
     private void prepareGraphDataToPaint() {
         List<Node> nodes = new ArrayList<>();
-        List<Edge> edges = new ArrayList<>();
-        List<Location> locations = new ArrayList<>();
+        new ArrayList<>();
+        List<LocationWithCoordinates> locationWithCoordinates = new ArrayList<>();
+        List<EdgeWithCoordinates> edgeWithCoordinates = new ArrayList<>();
 
         if (nodesCheckBox.isSelected())
             nodes = nodeDAO.getAllNodesOnFloor(selectedFloor.getFloors());
-        if (locationCheckBox.isSelected())
-            locations = locationDAO.getAllLocationsOnFloor(selectedFloor.getFloors());
-        if (edgesCheckBox.isSelected())
-            edges = edgeDAO.getAllEdgesOnFloor(selectedFloor.getFloors());
+        if (locationCheckBox.isSelected()) {
+            List<Location> locations = locationDAO.getAllLocationsOnFloor(selectedFloor.getFloors());
 
-        ((PaintPanel) mapPaintPanel).setGraphData(edges, nodes, locations);
+            for (Location l : locations) {
+                if (l.getId() > 1) {
+                    for (Node n : nodeDAO.getAllNodesOnFloor(selectedFloor.getFloors())) {
+                        if (l.getId() == n.getLocationID())
+                            locationWithCoordinates.add(new LocationWithCoordinates(n.getX(), n.getY()));
+                    }
+                }
+            }
+        }
+        if (edgesCheckBox.isSelected()) {
+            List<Edge> edges = edgeDAO.getAllEdgesOnFloor(selectedFloor.getFloors());
+
+            for (Edge e : edges) {
+                Node node = nodeDAO.getNode(e.getFrom());
+                Node node1 = nodeDAO.getNode(e.getTo());
+
+                edgeWithCoordinates.add(new EdgeWithCoordinates(node.getX(), node.getY(), node1.getX(), node1.getY()));
+            }
+        }
+
+        ((PaintPanel) mapPaintPanel).setGraphData(edgeWithCoordinates, nodes, locationWithCoordinates);
     }
 
     private MouseAdapter getMouseDragAdapter(JComponent component) {
@@ -212,7 +221,9 @@ public class MainWindow extends JFrame {
                 loadJsonsFromFolder(folderPath);
                 loadDaoToListModel();
 
-                allCheckBox.setSelected(true);
+                nodesCheckBox.setSelected(true);
+                edgesCheckBox.setSelected(true);
+                locationCheckBox.setSelected(true);
             } else
                 System.out.println("Open command cancelled by user");
 
@@ -255,6 +266,7 @@ public class MainWindow extends JFrame {
 
             ArrayList<Floor> floorArray = JsonParser.getEntityArrayList(floorPath, new TypeToken<List<Floor>>() {
             }.getType());
+            System.out.println("Floor DAO");
             for (Floor f : floorArray)
                 floorDAO.insert(f);
 
@@ -262,19 +274,31 @@ public class MainWindow extends JFrame {
 
             ArrayList<Location> locationsArray = JsonParser.getEntityArrayList(locationPath, new TypeToken<List<Location>>() {
             }.getType());
+            System.out.println("Location DAO");
             locationDAO.insert(locationsArray);
-            ArrayList<Location_Tag> locationTagArray = JsonParser.getEntityArrayList(tagPath, new TypeToken<List<Location_Tag>>() {
-            }.getType());
-            location_tagDAO.insert(locationTagArray);
+
             ArrayList<Node> nodeArray = JsonParser.getEntityArrayList(nodePath, new TypeToken<List<Node>>() {
             }.getType());
+            System.out.println("Node DAO");
             nodeDAO.insert(nodeArray);
+
+            ArrayList<Location_Tag> locationTagArray = JsonParser.getEntityArrayList(tagPath, new TypeToken<List<Location_Tag>>() {
+            }.getType());
+            System.out.println("LocationTAG DAO");
+            location_tagDAO.insert(locationTagArray);
+
             ArrayList<Edge> edgeArray = JsonParser.getEntityArrayList(edgePath, new TypeToken<List<Edge>>() {
             }.getType());
+            System.out.println("Edge DAO");
             edgeDAO.insert(edgeArray);
+
             ArrayList<Quick_Access_Location> quickAccessLocationArray = JsonParser.getEntityArrayList(quickAccessPath, new TypeToken<List<Quick_Access_Location>>() {
             }.getType());
+            System.out.println("Quick DAO");
             quick_access_locationDAO.insert(quickAccessLocationArray);
+
+            updateFloors();
+
             JOptionPane.showMessageDialog(getParent(), ResourceBundle.getBundle("strings").getString("json_success"));
         } catch (FileNotFoundException e) {
 
@@ -286,11 +310,27 @@ public class MainWindow extends JFrame {
 
     }
 
+    private void updateFloors() {
+        for (Floor f : floorDAO.getAllFloors()) {
+            String pathToMap = "/images/testmap_" + f.getFloors() + ".png";
+            floorDAO.update(new Floor(f.getFloors(), f.getFloorName(), pathToMap));
+        }
+        addItemsToFloorComboBox();
+    }
+
+    private void addItemsToFloorComboBox() {
+        for (Floor f : floorDAO.getAllFloors())
+            floorBox.addItem(f);
+    }
+
     private void createUIComponents() {
 
         nodesListModel = new DefaultListModel();
         locationsListModel = new DefaultListModel();
         edgesListModel = new DefaultListModel();
+
+        floorBox = new JComboBox();
+        mapPaintPanel = new PaintPanel();
 
         nodesList = new JList(nodesListModel);
         nodesList.setCellRenderer(new JTextListRenderer());
@@ -303,19 +343,11 @@ public class MainWindow extends JFrame {
 
         nodesList.setModel(nodesListModel);
 
-        floorBox = new JComboBox();
-
-        for (Floor f : floorDAO.getAllFloors()) {
-            String pathToMap = "/images/testmap_" + f.getFloors() + ".png";
-            floorDAO.update(new Floor(f.getFloors(), f.getFloorName(), pathToMap));
-        }
-        for (Floor f : floorDAO.getAllFloors())
-            floorBox.addItem(f);
-
+        addItemsToFloorComboBox();
         loadDaoToListModel();
+
         selectedFloor = ((Floor) (floorBox.getSelectedItem()));
 
-        mapPaintPanel = new PaintPanel();
         ImageIcon startImage;
         try {
             startImage = new ImageIcon(getClass().getResource(((Floor) (selectedFloor)).getImagePath()));
@@ -397,30 +429,25 @@ public class MainWindow extends JFrame {
         this.$$$loadButtonText$$$(addEdge, ResourceBundle.getBundle("strings").getString("Edge"));
         addButtonsPanel.add(addEdge, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         checkBoxesPanel = new JPanel();
-        checkBoxesPanel.setLayout(new GridLayoutManager(1, 4, new Insets(0, 10, 10, 0), -1, -1));
+        checkBoxesPanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 10, 10, 0), -1, -1));
         Font checkBoxesPanelFont = this.$$$getFont$$$(null, -1, -1, checkBoxesPanel.getFont());
         if (checkBoxesPanelFont != null) checkBoxesPanel.setFont(checkBoxesPanelFont);
         mainPanel.add(checkBoxesPanel, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        allCheckBox = new JCheckBox();
-        Font allCheckBoxFont = this.$$$getFont$$$(null, -1, 20, allCheckBox.getFont());
-        if (allCheckBoxFont != null) allCheckBox.setFont(allCheckBoxFont);
-        this.$$$loadButtonText$$$(allCheckBox, ResourceBundle.getBundle("strings").getString("all"));
-        checkBoxesPanel.add(allCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         nodesCheckBox = new JCheckBox();
         Font nodesCheckBoxFont = this.$$$getFont$$$(null, -1, 20, nodesCheckBox.getFont());
         if (nodesCheckBoxFont != null) nodesCheckBox.setFont(nodesCheckBoxFont);
         this.$$$loadButtonText$$$(nodesCheckBox, ResourceBundle.getBundle("strings").getString("nodes"));
-        checkBoxesPanel.add(nodesCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        checkBoxesPanel.add(nodesCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         locationCheckBox = new JCheckBox();
         Font locationCheckBoxFont = this.$$$getFont$$$(null, -1, 20, locationCheckBox.getFont());
         if (locationCheckBoxFont != null) locationCheckBox.setFont(locationCheckBoxFont);
         this.$$$loadButtonText$$$(locationCheckBox, ResourceBundle.getBundle("strings").getString("locations"));
-        checkBoxesPanel.add(locationCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        checkBoxesPanel.add(locationCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         edgesCheckBox = new JCheckBox();
         Font edgesCheckBoxFont = this.$$$getFont$$$(null, -1, 20, edgesCheckBox.getFont());
         if (edgesCheckBoxFont != null) edgesCheckBox.setFont(edgesCheckBoxFont);
         this.$$$loadButtonText$$$(edgesCheckBox, ResourceBundle.getBundle("strings").getString("edges"));
-        checkBoxesPanel.add(edgesCheckBox, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        checkBoxesPanel.add(edgesCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         scalePanel = new JPanel();
         scalePanel.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(scalePanel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_SOUTHEAST, GridConstraints.FILL_NONE, 1, 1, null, null, null, 0, false));

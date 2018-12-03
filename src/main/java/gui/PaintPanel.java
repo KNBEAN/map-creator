@@ -10,6 +10,8 @@ import java.util.List;
 
 
 public class PaintPanel extends JPanel {
+
+    private static Color DEFAUL_COLOR = Color.BLACK;
     private ImageIcon imageIcon;
     private ImageIcon resizedIcon;
 
@@ -77,11 +79,16 @@ public class PaintPanel extends JPanel {
 
         resizedIcon.paintIcon(this,graphics2D,0,0);
 
-
+        //Edges
         try{
             for (EdgeWithCoordinates e : edgeWithCoordinates){
                 int [] scaleFrom = scaleCoords(e.getFromX(),e.getFromY(),5);
                 int [] scaleTo = scaleCoords(e.getToX(),e.getToY(),5);
+
+                if (e.getLength() == 1)
+                    graphics2D.setColor(Color.GREEN);
+                else
+                    graphics2D.setColor(DEFAUL_COLOR);
 
                 ShapeDrawer.drawEdge(graphics2D,scaleFrom[0],scaleFrom[1],scaleTo[0],scaleTo[1],scaleTo[2]);
             }
@@ -89,6 +96,8 @@ public class PaintPanel extends JPanel {
             System.out.println("No edges to draw");
         }
 
+        graphics2D.setColor(DEFAUL_COLOR);
+        //Nodes
         try{
             for (Node n : nodeArray){
                 int [] scaled = scaleCoords(n.getX(),n.getY(),10);
@@ -98,6 +107,8 @@ public class PaintPanel extends JPanel {
             System.out.println("No nodes to draw");
         }
 
+        graphics2D.setColor(DEFAUL_COLOR);
+        //Locations
         try {
             for (LocationWithCoordinates l : locationArray){
                 int [] scaled = scaleCoords(l.getX(),l.getY(),15);

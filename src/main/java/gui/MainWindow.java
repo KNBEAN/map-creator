@@ -114,8 +114,9 @@ public class MainWindow extends JFrame {
             System.out.println(((Floor) floorBox.getItemAt(floorBox.getSelectedIndex())).getImagePath());
 
             selectedFloor = ((Floor) (floorBox.getSelectedItem()));
-            ((PaintPanel) mapPaintPanel).setImageIcon(new ImageIcon(getClass().getResource(selectedFloor.getImagePath())));
-
+            ImageIcon floorMap = new ImageIcon(getClass().getResource(selectedFloor.getImagePath()));
+            ((PaintPanel) mapPaintPanel).setImageIcon(floorMap);
+            ((PaintPanel) mapPaintPanel).resizeImage(floorMap, scaleSlider.getValue());
             prepareGraphDataToPaint();
             mapPaintPanel.repaint();
 
@@ -142,7 +143,6 @@ public class MainWindow extends JFrame {
 
     private void prepareGraphDataToPaint() {
         List<Node> nodes = new ArrayList<>();
-        new ArrayList<>();
         List<LocationWithCoordinates> locationWithCoordinates = new ArrayList<>();
         List<EdgeWithCoordinates> edgeWithCoordinates = new ArrayList<>();
 
@@ -152,7 +152,7 @@ public class MainWindow extends JFrame {
             List<Location> locations = locationDAO.getAllLocationsOnFloor(selectedFloor.getFloors());
 
             for (Location l : locations) {
-                if (l.getId() > 1) {
+                if (l.getId() >= 1) {
                     for (Node n : nodeDAO.getAllNodesOnFloor(selectedFloor.getFloors())) {
                         if (l.getId() == n.getLocationID())
                             locationWithCoordinates.add(new LocationWithCoordinates(n.getX(), n.getY()));
@@ -167,7 +167,7 @@ public class MainWindow extends JFrame {
                 Node node = nodeDAO.getNode(e.getFrom());
                 Node node1 = nodeDAO.getNode(e.getTo());
 
-                edgeWithCoordinates.add(new EdgeWithCoordinates(node.getX(), node.getY(), node1.getX(), node1.getY()));
+                edgeWithCoordinates.add(new EdgeWithCoordinates(node.getX(), node.getY(), node1.getX(), node1.getY(), e.getLength()));
             }
         }
 
@@ -261,42 +261,62 @@ public class MainWindow extends JFrame {
         String tagPath = folderPath + ResourceBundle.getBundle("strings").getString("json_tag");
         String quickAccessPath = folderPath + ResourceBundle.getBundle("strings").getString("json_quick_access");
 
-        Id_Generator.setStartingID();
+        Id_Generator.setStartingID();//To BĘDZIE potrzebne ~Kamil (03.12.2018; 10:15)
+
         try {
 
             ArrayList<Floor> floorArray = JsonParser.getEntityArrayList(floorPath, new TypeToken<List<Floor>>() {
             }.getType());
             System.out.println("Floor DAO");
-            for (Floor f : floorArray)
-                floorDAO.insert(f);
 
-            locationDAO.insert(new Location(-1, "none", null)); //For nodes without location_id
+            int floorDAOsize = floorDAO.getAllFloors().size();
+            if (floorDAOsize < floorArray.size()) {
+                for (Floor f : floorArray)
+                    floorDAO.insert(f);
+            }
 
+            try {
+                locationDAO.getLocation(-1).getName().equals("none");
+            } catch (NullPointerException ex) {
+                locationDAO.insert(new Location(-1, "none", null)); //For nodes without location_id
+            }
+
+            int locationDAOsize = locationDAO.getAllLocations().size();
             ArrayList<Location> locationsArray = JsonParser.getEntityArrayList(locationPath, new TypeToken<List<Location>>() {
             }.getType());
             System.out.println("Location DAO");
-            locationDAO.insert(locationsArray);
+            if (locationDAOsize < locationsArray.size())
+                locationDAO.insert(locationsArray);
 
+            int nodeDAOsize = nodeDAO.getAllNodes().size();
             ArrayList<Node> nodeArray = JsonParser.getEntityArrayList(nodePath, new TypeToken<List<Node>>() {
             }.getType());
             System.out.println("Node DAO");
-            nodeDAO.insert(nodeArray);
+            if (nodeDAOsize < nodeArray.size())
+                nodeDAO.insert(nodeArray);
 
+            int locationTagDAOsize = location_tagDAO.getAllLocations_Tag().size();
             ArrayList<Location_Tag> locationTagArray = JsonParser.getEntityArrayList(tagPath, new TypeToken<List<Location_Tag>>() {
             }.getType());
             System.out.println("LocationTAG DAO");
-            location_tagDAO.insert(locationTagArray);
+            if (locationTagDAOsize < locationTagArray.size())
+                location_tagDAO.insert(locationTagArray);
 
+            int edgeDAOsize = edgeDAO.getAllEdges().size();
             ArrayList<Edge> edgeArray = JsonParser.getEntityArrayList(edgePath, new TypeToken<List<Edge>>() {
             }.getType());
             System.out.println("Edge DAO");
-            edgeDAO.insert(edgeArray);
+            if (edgeDAOsize < edgeArray.size())
+                edgeDAO.insert(edgeArray);
 
+            int quickAccesDAOsize = quick_access_locationDAO.getAllQuick_Access_Locations().size();
             ArrayList<Quick_Access_Location> quickAccessLocationArray = JsonParser.getEntityArrayList(quickAccessPath, new TypeToken<List<Quick_Access_Location>>() {
             }.getType());
             System.out.println("Quick DAO");
-            quick_access_locationDAO.insert(quickAccessLocationArray);
+            if (quickAccesDAOsize < quickAccessLocationArray.size())
+                quick_access_locationDAO.insert(quickAccessLocationArray);
 
+            prepareGraphDataToPaint();
             updateFloors();
 
             JOptionPane.showMessageDialog(getParent(), ResourceBundle.getBundle("strings").getString("json_success"));
@@ -311,6 +331,7 @@ public class MainWindow extends JFrame {
     }
 
     private void updateFloors() {
+        //It's temporary, delete when add floor window will be done
         for (Floor f : floorDAO.getAllFloors()) {
             String pathToMap = "/images/testmap_" + f.getFloors() + ".png";
             floorDAO.update(new Floor(f.getFloors(), f.getFloorName(), pathToMap));
@@ -319,8 +340,13 @@ public class MainWindow extends JFrame {
     }
 
     private void addItemsToFloorComboBox() {
-        for (Floor f : floorDAO.getAllFloors())
-            floorBox.addItem(f);
+        int floorDAOsize = floorDAO.getAllFloors().size();
+
+        if (floorBox.getItemCount() < floorDAOsize) {
+            floorBox.removeAllItems();
+            for (Floor f : floorDAO.getAllFloors())
+                floorBox.addItem(f);
+        }
     }
 
     private void createUIComponents() {
@@ -343,7 +369,7 @@ public class MainWindow extends JFrame {
 
         nodesList.setModel(nodesListModel);
 
-        addItemsToFloorComboBox();
+        updateFloors();
         loadDaoToListModel();
 
         selectedFloor = ((Floor) (floorBox.getSelectedItem()));

@@ -52,18 +52,17 @@ public class EdgeDAOImp implements EdgeDAO {
     @Override
     public void insert(List<Edge> edges) {
         String sql = "INSERT INTO edges(id,[from],[to],[length]) VALUES(?,?,?,?)";
-        int row_count = 0;
-        try (Connection connection = DatabaseManager.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            for (Edge edge : edges) {
+        Connection connection = DatabaseManager.connect();
+        for (Edge edge : edges) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 setPrepStatementParams(edge, preparedStatement);
-                row_count = preparedStatement.executeUpdate();
-                if (row_count != 0) {
-                    edge = edge.swapEnds();
-                    setPrepStatementParams(edge, preparedStatement);
-                    preparedStatement.executeUpdate();
-                }
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
             }
+        }
+        try {
+            connection.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

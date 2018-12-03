@@ -108,7 +108,7 @@ public class Quick_Access_LocationDAOImp implements Quick_Access_LocationDAO {
 
     @Override
     public List<Quick_Access_Location> getAllQuick_Access_Locations() {
-        String sql = "SELECT * FROM quick_access_locations WHERE id = ?";
+        String sql = "SELECT * FROM quick_access_locations";
         try (Connection connection = DatabaseManager.connect();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {

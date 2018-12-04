@@ -6,6 +6,7 @@ import data.implementations.Node;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -80,17 +81,21 @@ public class PaintPanel extends JPanel {
         resizedIcon.paintIcon(this,graphics2D,0,0);
 
         //Edges
+        ArrayList<EdgeWithCoordinates> edges = new ArrayList<>();
         try{
-            for (EdgeWithCoordinates e : edgeWithCoordinates){
-                int [] scaleFrom = scaleCoords(e.getFromX(),e.getFromY(),5);
-                int [] scaleTo = scaleCoords(e.getToX(),e.getToY(),5);
+            for (int i = 0; i < edgeWithCoordinates.size(); i++){
 
-                if (e.getLength() == 1)
+                int [] scaleFrom = scaleCoords(edgeWithCoordinates.get(i).getFromX(),edgeWithCoordinates.get(i).getFromY(),5);
+                int [] scaleTo = scaleCoords(edgeWithCoordinates.get(i).getToX(),edgeWithCoordinates.get(i).getToY(),5);
+
+                edges.add(new EdgeWithCoordinates(scaleFrom[0],scaleFrom[1],scaleTo[0],scaleTo[1],edgeWithCoordinates.get(i).getLength()));
+
+                if (edgeWithCoordinates.get(i).getLength() == 1 )
                     graphics2D.setColor(Color.GREEN);
                 else
                     graphics2D.setColor(DEFAUL_COLOR);
 
-                ShapeDrawer.drawEdge(graphics2D,scaleFrom[0],scaleFrom[1],scaleTo[0],scaleTo[1],scaleTo[2]);
+                ShapeDrawer.drawEdge(graphics2D,edges.get(i),scaleTo[2]);
             }
         }catch (NullPointerException ex){
             System.out.println("No edges to draw");
@@ -108,11 +113,14 @@ public class PaintPanel extends JPanel {
         }
 
         graphics2D.setColor(DEFAUL_COLOR);
+        ArrayList<LocationWithCoordinates> locations = new ArrayList<>();
         //Locations
         try {
-            for (LocationWithCoordinates l : locationArray){
-                int [] scaled = scaleCoords(l.getX(),l.getY(),15);
-                ShapeDrawer.drawLocation(graphics2D,scaled[0],scaled[1],scaled[2]);
+            for (int i = 0; i < locationArray.size(); i++){
+                int [] scaled = scaleCoords(locationArray.get(i).getX(),locationArray.get(i).getY(),15);
+                locations.add(new LocationWithCoordinates(scaled[0],scaled[1]));
+
+                ShapeDrawer.drawLocation(graphics2D,locations.get(i),scaled[2]);
             }
         }catch (NullPointerException ex){
             System.out.println("No locations to draw");

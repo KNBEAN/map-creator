@@ -7,11 +7,4 @@ public abstract class Id_Generator {
         id++;
         return id;
     }
-
-    /**TODO:
-     * Change this method, it has to set id greater than the biggest id in database
-    */
-    static public void setStartingID(){
-        id = 1200;
-    }
 }

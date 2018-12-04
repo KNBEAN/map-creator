@@ -261,8 +261,6 @@ public class MainWindow extends JFrame {
         String tagPath = folderPath + ResourceBundle.getBundle("strings").getString("json_tag");
         String quickAccessPath = folderPath + ResourceBundle.getBundle("strings").getString("json_quick_access");
 
-        Id_Generator.setStartingID();//To BĘDZIE potrzebne ~Kamil (03.12.2018; 10:15)
-
         try {
 
             ArrayList<Floor> floorArray = JsonParser.getEntityArrayList(floorPath, new TypeToken<List<Floor>>() {

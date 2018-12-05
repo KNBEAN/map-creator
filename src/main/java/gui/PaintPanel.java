@@ -22,9 +22,9 @@ public class PaintPanel extends JPanel {
     private double xRatio = 1;
     private double yRatio = 1;
 
-    private List<EdgeWithCoordinates> edgeWithCoordinates;
-    private List<Node> nodeArray;
-    private List<LocationWithCoordinates> locationArray;
+    private List<EdgeWithCoordinates> edgesArray;
+    private List<Node> nodesArray;
+    private List<LocationWithCoordinates> locationsArray;
 
     public PaintPanel() {
         this.imageIcon = new ImageIcon();
@@ -62,9 +62,9 @@ public class PaintPanel extends JPanel {
     }
 
     public void setGraphData(List<EdgeWithCoordinates> edgeWithCoordinates, List<Node> nodeArray, List<LocationWithCoordinates> locationWithCoordinates){
-        this.edgeWithCoordinates= edgeWithCoordinates;
-        this.nodeArray = nodeArray;
-        this.locationArray = locationWithCoordinates;
+        this.edgesArray = edgeWithCoordinates;
+        this.nodesArray = nodeArray;
+        this.locationsArray = locationWithCoordinates;
     }
 
     @Override
@@ -83,14 +83,14 @@ public class PaintPanel extends JPanel {
         //Edges
         ArrayList<EdgeWithCoordinates> edges = new ArrayList<>();
         try{
-            for (int i = 0; i < edgeWithCoordinates.size(); i++){
+            for (int i = 0; i < edgesArray.size(); i++){
 
-                int [] scaleFrom = scaleCoords(edgeWithCoordinates.get(i).getFromX(),edgeWithCoordinates.get(i).getFromY(),5);
-                int [] scaleTo = scaleCoords(edgeWithCoordinates.get(i).getToX(),edgeWithCoordinates.get(i).getToY(),5);
+                int [] scaleFrom = scaleCoords(edgesArray.get(i).getFromX(), edgesArray.get(i).getFromY(),5);
+                int [] scaleTo = scaleCoords(edgesArray.get(i).getToX(), edgesArray.get(i).getToY(),5);
 
-                edges.add(new EdgeWithCoordinates(scaleFrom[0],scaleFrom[1],scaleTo[0],scaleTo[1],edgeWithCoordinates.get(i).getLength()));
+                edges.add(new EdgeWithCoordinates(scaleFrom[0],scaleFrom[1],scaleTo[0],scaleTo[1], edgesArray.get(i).getLength()));
 
-                if (edgeWithCoordinates.get(i).getLength() == 1 )
+                if (edgesArray.get(i).getLength() == 1 )
                     graphics2D.setColor(Color.GREEN);
                 else
                     graphics2D.setColor(DEFAUL_COLOR);
@@ -104,7 +104,7 @@ public class PaintPanel extends JPanel {
         graphics2D.setColor(DEFAUL_COLOR);
         //Nodes
         try{
-            for (Node n : nodeArray){
+            for (Node n : nodesArray){
                 int [] scaled = scaleCoords(n.getX(),n.getY(),10);
                 ShapeDrawer.drawNode(graphics2D,scaled[0],scaled[1],scaled[2]);
             }
@@ -116,8 +116,8 @@ public class PaintPanel extends JPanel {
         ArrayList<LocationWithCoordinates> locations = new ArrayList<>();
         //Locations
         try {
-            for (int i = 0; i < locationArray.size(); i++){
-                int [] scaled = scaleCoords(locationArray.get(i).getX(),locationArray.get(i).getY(),15);
+            for (int i = 0; i < locationsArray.size(); i++){
+                int [] scaled = scaleCoords(locationsArray.get(i).getX(), locationsArray.get(i).getY(),15);
                 locations.add(new LocationWithCoordinates(scaled[0],scaled[1]));
 
                 ShapeDrawer.drawLocation(graphics2D,locations.get(i),scaled[2]);

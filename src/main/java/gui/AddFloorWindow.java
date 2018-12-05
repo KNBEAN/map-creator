@@ -2,13 +2,11 @@ package gui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import database.implementations.Floor;
-import database.implementations.FloorWithImage;
+import data.implementations.Floor;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ResourceBundle;
 
@@ -27,7 +25,7 @@ public class AddFloorWindow extends JDialog {
 
     private JFileChooser imageChooser;
     private String imagePath;
-    private DefaultListModel<FloorWithImage> floorsListModel;
+    private DefaultListModel<Floor> floorsListModel;
     private int floorsListSelectedIndex = -1;
 
     public AddFloorWindow(String title) {
@@ -62,7 +60,7 @@ public class AddFloorWindow extends JDialog {
                         "Image Width: " + imageIcon.getIconWidth());
 
                 if (imageIcon.getIconHeight() > imageContainerHeight && imageIcon.getIconWidth() > imageContainerWidth)
-                    floorImageContainer.setIcon(resizeImageIcon(imageIcon,
+                    floorImageContainer.setIcon(PaintPanel.resizeImageIcon(imageIcon,
                             floorImageContainer.getHeight(),
                             floorImageContainer.getWidth()));
                 else
@@ -98,8 +96,8 @@ public class AddFloorWindow extends JDialog {
                                 JOptionPane.ERROR_MESSAGE);
                     } else {
                         System.out.println("Floor: " + floorNumber);
-                        FloorWithImage floorWithImage = new FloorWithImage(floorNumber, floorTagText, imagePath);
-                        floorsListModel.addElement(floorWithImage);
+                        Floor floor = new Floor(floorNumber, floorTagText, imagePath);
+                        floorsListModel.addElement(floor);
                     }
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(getParent(),
@@ -119,14 +117,16 @@ public class AddFloorWindow extends JDialog {
                 }
             }
             if (floorsListSelectedIndex > -1) {
-                FloorWithImage selectedElement = floorsListModel.elementAt(floorsListSelectedIndex);
+                Floor selectedElement = floorsListModel.elementAt(floorsListSelectedIndex);
                 floorField.setText(String.valueOf(selectedElement.getFloors()));
                 floorTagField.setText(selectedElement.floorName(floorsListSelectedIndex));
-                floorImageContainer.setIcon(resizeImageIcon(selectedElement.getImage(),
+
+                ImageIcon imageIcon = new ImageIcon(selectedElement.getImagePath());
+                floorImageContainer.setIcon(PaintPanel.resizeImageIcon(imageIcon,
                         floorImageContainer.getWidth(),
                         floorImageContainer.getHeight()));
-                imagePath = selectedElement.getPath();
-                imageName.setText(selectedElement.getImageName());
+                imagePath = selectedElement.getImagePath();
+                imageName.setText(selectedElement.getImagePath());
             }
 
         });
@@ -155,7 +155,7 @@ public class AddFloorWindow extends JDialog {
                         JOptionPane.ERROR_MESSAGE);
             } else {
 
-                floorsListModel.setElementAt(new FloorWithImage(
+                floorsListModel.setElementAt(new Floor(
                                 Integer.parseInt(floorField.getText()),
                                 floorTagField.getText(),
                                 imagePath),
@@ -163,16 +163,6 @@ public class AddFloorWindow extends JDialog {
             }
 
         });
-    }
-
-    private static ImageIcon resizeImageIcon(ImageIcon imageIcon, int width, int height) {
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
-
-        Graphics2D graphics2D = bufferedImage.createGraphics();
-        graphics2D.drawImage(imageIcon.getImage(), 0, 0, width, height, null);
-        graphics2D.dispose();
-
-        return new ImageIcon(bufferedImage, imageIcon.getDescription());
     }
 
 

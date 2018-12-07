@@ -87,7 +87,8 @@ public class EdgeDAOImp implements EdgeDAO {
         } finally {
             if (row_count != 0)
                 try (Connection connection = DatabaseManager.connect();
-                     PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                     PreparedStatement pstmt = connection.prepareStatement(
+                             "INSERT INTO edges([from],[to],[length]) VALUES(?,?,?)")) {
                     edge = edge.swapEnds();
                     setPrepStatementParams(edge, pstmt);
                     pstmt.executeUpdate();

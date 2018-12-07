@@ -3,7 +3,6 @@ package gui;
 import com.google.gson.reflect.TypeToken;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import data.Id_Generator;
 import data.JsonParser;
 import data.dao.*;
 import data.dao.interfaces.*;
@@ -48,9 +47,9 @@ public class MainWindow extends JFrame {
 
     private AddFloorWindow addFloorWindow;
 
-    private DefaultListModel nodesListModel;
-    private DefaultListModel locationsListModel;
-    private DefaultListModel edgesListModel;
+    private DefaultListModel<Node> nodesListModel;
+    private DefaultListModel<Location> locationsListModel;
+    private DefaultListModel<Edge> edgesListModel;
 
     private EdgeDAO edgeDAO;
     private NodeDAO nodeDAO;
@@ -60,6 +59,7 @@ public class MainWindow extends JFrame {
     private Quick_Access_LocationDAO quick_access_locationDAO;
 
     private Floor selectedFloor;
+    private DefaultComboBoxModel<Floor> floorComboBoxModel;
 
     public MainWindow(String title) {
         super(title);
@@ -114,10 +114,8 @@ public class MainWindow extends JFrame {
 
         floorBox.addActionListener(e -> {
 
-            System.out.println(((Floor) floorBox.getItemAt(floorBox.getSelectedIndex())).getImagePath());
-
-            selectedFloor = ((Floor) (floorBox.getSelectedItem()));
-            ImageIcon floorMap = new ImageIcon(getClass().getResource(selectedFloor.getImagePath()));
+            selectedFloor = ((Floor) (floorComboBoxModel.getSelectedItem()));
+            ImageIcon floorMap = new ImageIcon(selectedFloor.getImagePath());
             ((PaintPanel) mapPaintPanel).setImageIcon(floorMap);
             ((PaintPanel) mapPaintPanel).resizeImage(floorMap, scaleSlider.getValue());
             prepareGraphDataToPaint();
@@ -141,6 +139,7 @@ public class MainWindow extends JFrame {
             mapPaintPanel.repaint();
 
         });
+
 
     }
 
@@ -224,9 +223,11 @@ public class MainWindow extends JFrame {
                 loadJsonsFromFolder(folderPath);
                 loadDaoToListModel();
 
-                nodesCheckBox.setSelected(true);
-                edgesCheckBox.setSelected(true);
-                locationCheckBox.setSelected(true);
+                if (selectedFloor != null) {
+                    nodesCheckBox.setSelected(true);
+                    edgesCheckBox.setSelected(true);
+                    locationCheckBox.setSelected(true);
+                }
             } else
                 System.out.println("Open command cancelled by user");
 
@@ -239,7 +240,16 @@ public class MainWindow extends JFrame {
         showFloors.addActionListener(e -> {
             addFloorWindow = new AddFloorWindow(ResourceBundle.getBundle("strings").getString("floors_manager"));
             addFloorWindow.setVisible(true);
+            addFloorWindow.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    updateFloors();
+                    System.out.println("Add window closed");
+                }
+            });
+
         });
+
         layersMenu.add(showFloors);
 
         menuBar.add(fileMenu);
@@ -323,7 +333,6 @@ public class MainWindow extends JFrame {
             if (quickAccesDAOsize < quickAccessLocationArray.size())
                 quick_access_locationDAO.insert(quickAccessLocationArray);
 
-            prepareGraphDataToPaint();
             updateFloors();
 
             JOptionPane.showMessageDialog(getParent(), ResourceBundle.getBundle("strings").getString("json_success"));
@@ -338,22 +347,19 @@ public class MainWindow extends JFrame {
     }
 
     private void updateFloors() {
-        //It's temporary, delete when add floor window will be done
-        for (Floor f : floorDAO.getAllFloors()) {
-            String pathToMap = "/images/testmap_" + f.getFloors() + ".png";
-            floorDAO.update(new Floor(f.getFloors(), f.getFloorName(), pathToMap));
-        }
-        addItemsToFloorComboBox();
-    }
-
-    private void addItemsToFloorComboBox() {
         int floorDAOsize = floorDAO.getAllFloors().size();
 
         if (floorBox.getItemCount() < floorDAOsize) {
-            floorBox.removeAllItems();
+            try {
+                floorComboBoxModel.removeAllElements();
+            } catch (NullPointerException ex) {
+            }
             for (Floor f : floorDAO.getAllFloors())
-                floorBox.addItem(f);
+                if (f.getImagePath() != null) {
+                    floorComboBoxModel.addElement(f);
+                }
         }
+
     }
 
     private void createUIComponents() {
@@ -361,8 +367,9 @@ public class MainWindow extends JFrame {
         nodesListModel = new DefaultListModel();
         locationsListModel = new DefaultListModel();
         edgesListModel = new DefaultListModel();
+        floorComboBoxModel = new DefaultComboBoxModel();
 
-        floorBox = new JComboBox();
+        floorBox = new JComboBox(floorComboBoxModel);
         mapPaintPanel = new PaintPanel();
 
         nodesList = new JList(nodesListModel);
@@ -377,11 +384,11 @@ public class MainWindow extends JFrame {
         updateFloors();
         loadDaoToListModel();
 
-        selectedFloor = ((Floor) (floorBox.getSelectedItem()));
+        selectedFloor = ((Floor) (floorComboBoxModel.getSelectedItem()));
 
         ImageIcon startImage;
         try {
-            startImage = new ImageIcon(getClass().getResource(((Floor) (selectedFloor)).getImagePath()));
+            startImage = new ImageIcon(((selectedFloor)).getImagePath());
         } catch (NullPointerException ex) {
             //Load some default map
             startImage = new ImageIcon(getClass().getResource("/images/samplemap.png"));

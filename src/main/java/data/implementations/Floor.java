@@ -52,7 +52,13 @@ public class Floor implements data.model.Floor {
 
     @Override
     public String toString() {
-        return "";
+        return floorName;
 
+    }
+
+    public String getFloorInfo(){
+        return "Floor: " + getFloors() + "\n" +
+                "Floor name: " + getFloorName() + "\n" +
+                "Image path: " + getImagePath();
     }
 }

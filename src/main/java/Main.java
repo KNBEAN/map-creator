@@ -36,7 +36,6 @@ public class Main {
 
 
         frame.setBounds(300,100,1100,600);
-
         frame.setVisible(true);
     }
 

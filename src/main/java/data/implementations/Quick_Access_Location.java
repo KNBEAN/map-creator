@@ -1,14 +1,11 @@
 package data.implementations;
 
-import data.Id_Generator;
-
 public class Quick_Access_Location implements data.model.Quick_Access_Location {
     private int id;
     private int location_id;
     private int quick_access_type;
 
     public Quick_Access_Location(int location_id, int quick_access_type) {
-        this.id = Id_Generator.getId();
         this.location_id = location_id;
         this.quick_access_type = quick_access_type;
     }

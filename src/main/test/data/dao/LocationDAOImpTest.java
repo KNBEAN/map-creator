@@ -23,10 +23,13 @@ class LocationDAOImpTest {
     private FloorDAO floorDAO;
     private Location location1;
     private Location location2;
+    private Location location3;
+    private ArrayList<Location> locations;
+    private ArrayList<Location> locationsPrep;
 
     @BeforeAll
     static void init() {
-        DatabaseManager.createNewDatabase(null,true);
+        DatabaseManager.createNewDatabase(null,false);
     }
 
     @BeforeEach
@@ -36,40 +39,44 @@ class LocationDAOImpTest {
         nodeDAO = new NodeDAOImp();
         locationDAO = new LocationDAOImp();
         floorDAO = new FloorDAOImp();
-        location1 = new Location("2");
-        location2 = new Location("1");
-        locationDAO.insert(location1);
-        locationDAO.insert(location2);
+        locationsPrep = new ArrayList<Location>(){
+            {
+                add(new Location(1,"1",null));
+                add(new Location(2,"2",null));
+                add(new Location(3,"3",null));
+                add(new Location(-1,"null",null));
+            }
+        };
+        locationDAO.insert(locationsPrep);
     }
 
 
     @Test
     void shouldGetLocation() {
-        assertEquals(location1, locationDAO.getLocation(location1.getId()));
-        assertEquals(location2, locationDAO.getLocation(location2.getId()));
+        assertEquals(locationsPrep.get(0), locationDAO.getLocation(locationsPrep.get(0).getId()));
+        assertEquals(locationsPrep.get(1), locationDAO.getLocation(locationsPrep.get(1).getId()));
     }
 
     @Test
     void shouldDeleteLocation() {
 
-        locationDAO.delete(location1.getId());
-        locationDAO.delete(location2.getId());
-        assertNull(locationDAO.getLocation(location1.getId()));
-        assertNull(locationDAO.getLocation(location2.getId()));
+        locationDAO.delete(1);
+        locationDAO.delete(2);
+        assertNull(locationDAO.getLocation(locationsPrep.get(0).getId()));
+        assertNull(locationDAO.getLocation(locationsPrep.get(1).getId()));
     }
 
     @Test
     void shouldGetAllLocations() {
         List<Location> locations = locationDAO.getAllLocations();
-        assertEquals(location1, locations.get(0));
-        assertEquals(location2, locations.get(1));
+        assertEquals(locationsPrep.size(),locations.size());
     }
 
     @Test
     void shouldGetAllLocationsOnFloor() {
-        Location location1 = new Location("location1");
-        Location location2 = new Location("location2");
-        Location location3 = new Location("location3");
+        Location location1 = new Location(4,"location1",null);
+        Location location2 = new Location(5,"location2",null);
+        Location location3 = new Location(6,"location3",null);
         Floor floor1 = new Floor(1, "floor1", null);
         Floor floor2 = new Floor(2, "floor2", null);
         locationDAO.insert(location1);
@@ -89,18 +96,4 @@ class LocationDAOImpTest {
         assertEquals(2, locations2.size());
     }
 
-    @Test
-    void shouldInsertAll() {
-        List<Location> locations = new ArrayList<>();
-        Location location1 = new Location("location5");
-        Location location2 = new Location("location6");
-        Location location3 = new Location("location7");
-        locations.add(location1);
-        locations.add(location2);
-        locations.add(location3);
-        locationDAO.insert(locations);
-        assertTrue(locationDAO.getAllLocations().contains(location1));
-        assertTrue(locationDAO.getAllLocations().contains(location2));
-        assertTrue(locationDAO.getAllLocations().contains(location3));
-    }
 }

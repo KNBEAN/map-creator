@@ -17,19 +17,23 @@ public class NodeDAOImp implements NodeDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             for (Node node : nodes) {
                 wrapNodeInPreparedStatement(preparedStatement, node);
+                preparedStatement.addBatch();
             }
+            preparedStatement.executeBatch();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
     private void wrapNodeInPreparedStatement(PreparedStatement pstmt, Node node) throws SQLException {
-        pstmt.setInt(1, node.getId());
-        pstmt.setInt(2, node.getX());
-        pstmt.setInt(3, node.getY());
-        pstmt.setInt(4, node.getFloor());
-        pstmt.setInt(5, node.getLocationID());
-        pstmt.executeUpdate();
+        int i = 0;
+        if (node.getId() !=0)
+        pstmt.setInt(++i, node.getId());
+        pstmt.setInt(++i, node.getX());
+        pstmt.setInt(++i, node.getY());
+        pstmt.setInt(++i, node.getFloor());
+        pstmt.setInt(++i, node.getLocationID());
+
     }
 
     @Override
@@ -77,10 +81,14 @@ public class NodeDAOImp implements NodeDAO {
 
     @Override
     public void insert(Node node) {
-        String sql = "INSERT INTO nodes(id,x,y,floor,location_id) VALUES(?,?,?,?,?)";
+        String sql;
+        if (node.getId() !=0)
+        sql = "INSERT INTO nodes(id,x,y,floor,location_id) VALUES(?,?,?,?,?)";
+        else sql = "INSERT INTO nodes(x,y,floor,location_id) VALUES(?,?,?,?)";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             wrapNodeInPreparedStatement(preparedStatement, node);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

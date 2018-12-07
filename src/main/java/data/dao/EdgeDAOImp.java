@@ -53,14 +53,16 @@ public class EdgeDAOImp implements EdgeDAO {
     public void insert(List<Edge> edges) {
         String sql = "INSERT INTO edges(id,[from],[to],[length]) VALUES(?,?,?,?)";
         Connection connection = DatabaseManager.connect();
-        for (Edge edge : edges) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                setPrepStatementParams(edge, preparedStatement);
-                preparedStatement.executeUpdate();
+                for (Edge edge : edges) {
+                    setPrepStatementParams(edge, preparedStatement);
+                    preparedStatement.addBatch();
+                }
+                preparedStatement.executeBatch();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
-        }
+
         try {
             connection.close();
         } catch (SQLException e) {
@@ -70,7 +72,10 @@ public class EdgeDAOImp implements EdgeDAO {
 
     @Override
     public void insert(Edge edge) {
-        String sql = "INSERT INTO edges(id,[from],[to],[length]) VALUES(?,?,?,?)";
+        String sql;
+        if (edge.getId() !=0)
+         sql = "INSERT INTO edges(id,[from],[to],[length]) VALUES(?,?,?,?)";
+        else sql =  "INSERT INTO edges([from],[to],[length]) VALUES(?,?,?)";
         int row_count = 0;
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -93,10 +98,12 @@ public class EdgeDAOImp implements EdgeDAO {
     }
 
     private void setPrepStatementParams(Edge edge, PreparedStatement pstmt) throws SQLException {
-        pstmt.setInt(1, edge.getId());
-        pstmt.setInt(2, edge.getFrom());
-        pstmt.setInt(3, edge.getTo());
-        pstmt.setInt(4, edge.getLength());
+        int i = 0;
+        if (edge.getId() != 0)
+        pstmt.setInt(++i, edge.getId());
+        pstmt.setInt(++i, edge.getFrom());
+        pstmt.setInt(++i, edge.getTo());
+        pstmt.setInt(++i, edge.getLength());
     }
 
     @Override

@@ -1,7 +1,5 @@
 package data.implementations;
 
-import data.Id_Generator;
-
 public class Node implements data.model.Node {
 
     private int id;
@@ -11,14 +9,12 @@ public class Node implements data.model.Node {
     private int locationID;
 
     public Node(int x, int y, int floor, int locationId){
-        id = Id_Generator.getId();
         this.x = x;
         this.y = y;
         this.floor = floor;
         this.locationID = locationId;
     }
     public Node(int x, int y, int floor){
-        id = Id_Generator.getId();
         this.x = x;
         this.y = y;
         this.floor = floor;

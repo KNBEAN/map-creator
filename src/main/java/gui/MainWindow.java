@@ -22,7 +22,6 @@ public class MainWindow extends JFrame {
     private JButton addNode;
     private JButton addLocation;
     private JButton addEdge;
-    private JCheckBox allCheckBox;
     private JCheckBox nodesCheckBox;
     private JCheckBox locationCheckBox;
     private JCheckBox edgesCheckBox;
@@ -43,8 +42,6 @@ public class MainWindow extends JFrame {
     private JPanel scalePanel;
     private JComboBox floorBox;
     private JPanel selectFloorPanel;
-
-
     private AddFloorWindow addFloorWindow;
 
     private DefaultListModel<Node> nodesListModel;
@@ -347,18 +344,15 @@ public class MainWindow extends JFrame {
     }
 
     private void updateFloors() {
-        int floorDAOsize = floorDAO.getAllFloors().size();
 
-        if (floorBox.getItemCount() < floorDAOsize) {
-            try {
-                floorComboBoxModel.removeAllElements();
-            } catch (NullPointerException ex) {
-            }
-            for (Floor f : floorDAO.getAllFloors())
-                if (f.getImagePath() != null) {
-                    floorComboBoxModel.addElement(f);
-                }
+        try {
+            floorComboBoxModel.removeAllElements();
+        } catch (NullPointerException ex) {
         }
+        for (Floor f : floorDAO.getAllFloors())
+            if (f.getImagePath() != null) {
+                floorComboBoxModel.addElement(f);
+            }
 
     }
 

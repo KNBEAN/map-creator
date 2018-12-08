@@ -18,7 +18,7 @@
           <color color="-16645630"/>
         </border>
         <children>
-          <component id="ebc6c" class="javax.swing.JLabel" binding="imageName">
+          <component id="ebc6c" class="javax.swing.JLabel" binding="imagePathLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -260,7 +260,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="61126" class="javax.swing.JList" binding="floorWithoutMap" custom-create="true">
+                  <component id="61126" class="javax.swing.JList" binding="floorsWithoutMap" custom-create="true">
                     <constraints/>
                     <properties/>
                   </component>

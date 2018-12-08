@@ -9,7 +9,6 @@ import data.implementations.Floor;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
 import java.util.ResourceBundle;
 
 public class AddFloorWindow extends JDialog {
@@ -19,20 +18,19 @@ public class AddFloorWindow extends JDialog {
     private JTextField floorField;
     private JTextField floorTagField;
     private JButton addImageButton;
-    private JLabel imageName;
+    private JLabel imagePathLabel;
     private JList floorsList;
     private JTabbedPane tabbedPane1;
     private JButton changeFloorButton;
     private JButton removeFloorButton;
     private JTabbedPane tabbedPane2;
-    private JList floorWithoutMap;
+    private JList floorsWithoutMap;
     private FloorDAO floorDAO = new FloorDAOImp();
-
     private JFileChooser imageChooser;
     private String imagePath;
     private DefaultListModel<Floor> floorsListModel;
     private DefaultListModel<Floor> floorsWithoutMapModel;
-    private int floorWithoutMapIndex = -1;
+    private int floorsWithoutMapIndex = -1;
     private int floorsListSelectedIndex = -1;
 
     public AddFloorWindow(String title) {
@@ -59,7 +57,6 @@ public class AddFloorWindow extends JDialog {
 
             int result = imageChooser.showOpenDialog(getParent());
             if (result == JFileChooser.APPROVE_OPTION) {
-                File file = imageChooser.getSelectedFile();
                 imagePath = imageChooser.getSelectedFile().getPath();
                 ImageIcon imageIcon = new ImageIcon(imagePath);
 
@@ -72,9 +69,7 @@ public class AddFloorWindow extends JDialog {
                             floorImageContainer.getHeight()));
                 else
                     floorImageContainer.setIcon(imageIcon);
-
-                imageName.setText(file.getName());
-                System.out.println("File opened: " + file.getName());
+                    imagePathLabel.setText(imagePath);
 
             } else {
                 System.out.println("Open command cancelled by user");
@@ -83,7 +78,7 @@ public class AddFloorWindow extends JDialog {
 
         addNewFloorButton.addActionListener(e -> {
             String floorFieldText = floorField.getText().trim();
-            int floorNumber = 0;
+            int floorNumber;
             String floorTagText = floorTagField.getText().trim();
 
             if (floorFieldText.isEmpty() || floorTagText.isEmpty() || imagePath == null) {
@@ -102,11 +97,10 @@ public class AddFloorWindow extends JDialog {
                                 ResourceBundle.getBundle("strings").getString("error"),
                                 JOptionPane.ERROR_MESSAGE);
                     } else {
-                        System.out.println("Floor: " + floorNumber);
                         Floor floor = new Floor(floorNumber, floorTagText, imagePath);
                         floorsListModel.addElement(floor);
                         try {
-                            Floor floorToRemove = floorsWithoutMapModel.getElementAt(floorWithoutMapIndex);
+                            Floor floorToRemove = floorsWithoutMapModel.getElementAt(floorsWithoutMapIndex);
                             floorsWithoutMapModel.removeElement(floorToRemove);
                             floorDAO.update(floor);
                         } catch (ArrayIndexOutOfBoundsException ex) {
@@ -141,46 +135,46 @@ public class AddFloorWindow extends JDialog {
                         floorImageContainer.getWidth(),
                         floorImageContainer.getHeight()));
                 imagePath = selectedElement.getImagePath();
-                imageName.setText(selectedElement.getImagePath());
+                imagePathLabel.setText(selectedElement.getImagePath());
             }
 
         });
 
-        floorWithoutMap.addListSelectionListener(e -> {
+        floorsWithoutMap.addListSelectionListener(e -> {
 
-            floorWithoutMapIndex = floorWithoutMap.getSelectedIndex();
-            if (floorWithoutMapIndex == -1) {
+            floorsWithoutMapIndex = floorsWithoutMap.getSelectedIndex();
+            if (floorsWithoutMapIndex == -1) {
                 if (!floorsWithoutMapModel.isEmpty()) {
-                    floorWithoutMapIndex++;
+                    floorsWithoutMapIndex++;
                 }
             }
-            if (floorWithoutMapIndex > -1) {
-                Floor selectedElement = floorsWithoutMapModel.elementAt(floorWithoutMapIndex);
+            if (floorsWithoutMapIndex > -1) {
+                Floor selectedElement = floorsWithoutMapModel.elementAt(floorsWithoutMapIndex);
                 floorField.setText(String.valueOf(selectedElement.getFloors()));
-                floorTagField.setText(selectedElement.floorName(floorWithoutMapIndex));
+                floorTagField.setText(selectedElement.floorName(floorsWithoutMapIndex));
 
                 ImageIcon imageIcon = new ImageIcon(selectedElement.getImagePath());
                 floorImageContainer.setIcon(PaintPanel.resizeImageIcon(imageIcon,
                         floorImageContainer.getWidth(),
                         floorImageContainer.getHeight()));
                 imagePath = selectedElement.getImagePath();
-                imageName.setText(selectedElement.getImagePath());
+                imagePathLabel.setText(selectedElement.getImagePath());
             }
 
         });
 
         removeFloorButton.addActionListener(e -> {
-
             int removeSelection = JOptionPane.showConfirmDialog(getParent(),
                     ResourceBundle.getBundle("strings").getString("delete") + " " +
                             floorsListModel.getElementAt(floorsListSelectedIndex).floorName(floorsListSelectedIndex) +
-                            "?",
+                            "? " + ResourceBundle.getBundle("strings").getString("remove_graph"),
                     ResourceBundle.getBundle("strings").getString("confirm"),
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
             if (removeSelection == JOptionPane.OK_OPTION) {
                 Floor temporaryFloor = floorsListModel.getElementAt(floorsListSelectedIndex);
                 floorsListModel.removeElement(temporaryFloor);
+                floorDAO.delete(temporaryFloor.getFloors());
             }
 
         });
@@ -210,16 +204,15 @@ public class AddFloorWindow extends JDialog {
         floorsList = new JList(floorsListModel);
         floorsList.setCellRenderer(new FloorListRenderer());
 
-        floorWithoutMap = new JList(floorsWithoutMapModel);
-        floorWithoutMap.setCellRenderer(new FloorListRenderer());
+        floorsWithoutMap = new JList(floorsWithoutMapModel);
+        floorsWithoutMap.setCellRenderer(new FloorListRenderer());
 
 
         for (Floor f : floorDAO.getAllFloors()) {
-            if (f.getImagePath() == null) {
+            if (f.getImagePath() == null)
                 floorsWithoutMapModel.addElement(f);
-            } else {
+            else
                 floorsListModel.addElement(f);
-            }
         }
 
     }
@@ -238,11 +231,11 @@ public class AddFloorWindow extends JDialog {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 10, 0, 5), -1, -1));
         contentPane.add(panel1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, 1, null, null, null, 0, false));
-        imageName = new JLabel();
-        Font imageNameFont = this.$$$getFont$$$(null, -1, 8, imageName.getFont());
-        if (imageNameFont != null) imageName.setFont(imageNameFont);
-        imageName.setText("");
-        panel1.add(imageName, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        imagePathLabel = new JLabel();
+        Font imagePathLabelFont = this.$$$getFont$$$(null, -1, 8, imagePathLabel.getFont());
+        if (imagePathLabelFont != null) imagePathLabel.setFont(imagePathLabelFont);
+        imagePathLabel.setText("");
+        panel1.add(imagePathLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -335,7 +328,7 @@ public class AddFloorWindow extends JDialog {
         tabbedPane2.addTab(ResourceBundle.getBundle("strings").getString("floor_with_no_map"), panel10);
         final JScrollPane scrollPane2 = new JScrollPane();
         panel10.add(scrollPane2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        scrollPane2.setViewportView(floorWithoutMap);
+        scrollPane2.setViewportView(floorsWithoutMap);
     }
 
     /**

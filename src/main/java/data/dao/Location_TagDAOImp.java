@@ -18,8 +18,9 @@ public class Location_TagDAOImp implements Location_TagDAO {
             for (Location_Tag location_tag : location_tags) {
                 preparedStatement.setString(1, location_tag.getTag());
                 preparedStatement.setInt(2, location_tag.getLocation_id());
-                preparedStatement.executeUpdate();
+                preparedStatement.addBatch();
             }
+            preparedStatement.executeBatch();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

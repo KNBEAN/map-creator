@@ -1,7 +1,5 @@
 package data.implementations;
 
-import data.Id_Generator;
-
 public class Location implements data.model.Location {
 
     private int id;
@@ -9,13 +7,11 @@ public class Location implements data.model.Location {
     private String description;
 
     public Location(String name, String description) {
-        this.id = Id_Generator.getId();
         this.name = name;
         this.description = description;
     }
 
     public Location(String name) {
-        this.id = Id_Generator.getId();
         this.name = name;
     }
 

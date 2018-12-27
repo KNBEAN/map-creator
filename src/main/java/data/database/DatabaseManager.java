@@ -1,8 +1,7 @@
 package data.database;
 
-import jdk.nashorn.internal.runtime.Context;
 import org.sqlite.SQLiteConfig;
-import org.sqlite.SQLiteConnection;
+
 import java.sql.*;
 
 public class DatabaseManager {
@@ -92,7 +91,7 @@ public class DatabaseManager {
     public static void createTables(){
 
         String sqlNODES = "CREATE TABLE IF NOT EXISTS nodes (\n" +
-                " id integer PRIMARY KEY, \n" +
+                " id integer PRIMARY KEY AUTOINCREMENT, \n" +
                 " x integer NOT NULL, \n" +
                 " y integer NOT NULL,  \n" +
                 " floor integer NOT NULL, \n" +
@@ -104,21 +103,21 @@ public class DatabaseManager {
                 "name text NOT NULL, \n" +
                 "imagePath text);";
         String sqlLOCATIONS = "CREATE TABLE IF NOT EXISTS locations (" +
-                " id integer PRIMARY KEY ,\n" +
+                " id integer PRIMARY KEY AUTOINCREMENT,\n" +
                 " name text NOT NULL ,\n" +
                 " description text);";
         String sqlLOCATION_TAGS = "CREATE TABLE IF NOT EXISTS location_tags(\n" +
                 "tag text PRIMARY KEY,\n" +
                 "location_id integer NOT NULL, FOREIGN KEY(location_id) REFERENCES locations(id) ON UPDATE CASCADE ON DELETE CASCADE);";
         String sqlEDGES = "CREATE TABLE IF NOT EXISTS edges(\n" +
-                "id integer NOT NULL PRIMARY KEY, \n" +
+                "id integer NOT NULL PRIMARY KEY AUTOINCREMENT, \n" +
                 "[from] integer NOT NULL, \n" +
                 "[to] integer NOT NULL, \n" +
                 "length integer NOT NULL, \n" +
                 "FOREIGN KEY ([from]) REFERENCES nodes(id) ON UPDATE CASCADE ON DELETE CASCADE, \n" +
                 "FOREIGN KEY ([to]) REFERENCES nodes(id) ON UPDATE CASCADE ON DELETE CASCADE);";
         String sqlQUICK_ACCESS_LOCATIONS = "CREATE TABLE IF NOT EXISTS quick_access_locations(\n" +
-                "id integer NOT NULL PRIMARY KEY, \n" +
+                "id integer NOT NULL PRIMARY KEY AUTOINCREMENT, \n" +
                 "location_id integer NOT NULL, \n" +
                 "quick_access_type integer NOT NULL, \n"+
                 "FOREIGN KEY (location_id) REFERENCES locations(id) ON UPDATE CASCADE ON DELETE CASCADE);";

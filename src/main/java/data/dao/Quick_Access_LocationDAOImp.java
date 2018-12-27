@@ -52,12 +52,17 @@ public class Quick_Access_LocationDAOImp implements Quick_Access_LocationDAO {
 
     @Override
     public void insert(Quick_Access_Location quick_access_location) {
-        String sql = "INSERT INTO quick_access_locations(id,location_id,quick_access_type) VALUES(?,?,?)";
+        String sql;
+        if (quick_access_location.getID() !=0)
+        sql = "INSERT INTO quick_access_locations(id,location_id,quick_access_type) VALUES(?,?,?)";
+        else sql = "INSERT INTO quick_access_locations(location_id,quick_access_type) VALUES(?,?)";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, quick_access_location.getID());
-            preparedStatement.setInt(2, quick_access_location.getLocationID());
-            preparedStatement.setInt(3, quick_access_location.getQuickAccessType());
+            int i = 0;
+            if (quick_access_location.getID() !=0)
+            preparedStatement.setInt(++i, quick_access_location.getID());
+            preparedStatement.setInt(++i, quick_access_location.getLocationID());
+            preparedStatement.setInt(++i, quick_access_location.getQuickAccessType());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -73,8 +78,9 @@ public class Quick_Access_LocationDAOImp implements Quick_Access_LocationDAO {
                 preparedStatement.setInt(1, quick_access_location.getID());
                 preparedStatement.setInt(2, quick_access_location.getLocationID());
                 preparedStatement.setInt(3, quick_access_location.getQuickAccessType());
-                preparedStatement.executeUpdate();
+                preparedStatement.addBatch();
             }
+            preparedStatement.executeBatch();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

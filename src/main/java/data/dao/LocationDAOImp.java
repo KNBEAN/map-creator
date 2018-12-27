@@ -19,8 +19,9 @@ public class LocationDAOImp implements LocationDAO {
                 preparedStatement.setInt(1, location.getId());
                 preparedStatement.setString(2, location.getName());
                 preparedStatement.setString(3, location.getDescription());
-                preparedStatement.executeUpdate();
+                preparedStatement.addBatch();
             }
+            preparedStatement.executeBatch();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -68,12 +69,19 @@ public class LocationDAOImp implements LocationDAO {
 
     @Override
     public void insert(Location location) {
-        String sql = "INSERT INTO locations(id,name,description) VALUES(?,?,?)";
+        String sql;
+        if (location.getId()== 0)
+        sql = "INSERT INTO locations(name,description) VALUES(?,?)";
+        else
+            sql = "INSERT INTO locations(id, name,description) VALUES(?,?,?)";
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, location.getId());
-            preparedStatement.setString(2, location.getName());
-            preparedStatement.setString(3, location.getDescription());
+            int i = 0;
+            if (location.getId()!= 0)
+                preparedStatement.setInt(++i, location.getId());
+                preparedStatement.setString(++i, location.getName());
+                preparedStatement.setString(++i, location.getDescription());
+
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

@@ -1,6 +1,5 @@
 package data.implementations;
 
-import data.Id_Generator;
 import data.model.Node;
 
 public class Edge implements data.model.Edge {
@@ -11,14 +10,12 @@ public class Edge implements data.model.Edge {
     private int length;
 
     public Edge(data.implementations.Node from_Node, data.implementations.Node to_Node){
-        id = Id_Generator.getId();
         this.from = from_Node.getId();
         this.to = to_Node.getId();
         this.length = calculateLength(from_Node,to_Node);
     }
 
     public Edge(int from_id, int to_id, int length){
-        id = Id_Generator.getId();
         this.from = from_id;
         this.to = to_id;
         this.length = length;

@@ -52,17 +52,17 @@ class Quick_Access_LocationDAOImpTest {
         locationDAO.insert(location1);
         locationDAO.insert(location2);
         nodeDAO = new NodeDAOImp();
-        Node node1 = new Node(1,1,1,location1.getId());
-        Node node2 = new Node(1,1,1,location1.getId());
-        Node node3 = new Node(1,1,2,location2.getId());
-        Node node4 = new Node(1,1,2,location2.getId());
+        Node node1 = new Node(1,1,1,1);
+        Node node2 = new Node(1,1,1,1);
+        Node node3 = new Node(1,1,2,2);
+        Node node4 = new Node(1,1,2,2);
         nodeDAO.insert(node1);
         nodeDAO.insert(node2);
         nodeDAO.insert(node3);
         nodeDAO.insert(node4);
-        qaLocation1 = new Quick_Access_Location(location1.getId(),1);
-        qaLocation4 = new Quick_Access_Location(location1.getId(),1);
-        qaLocation2 = new Quick_Access_Location(location2.getId(),2);
+        qaLocation1 = new Quick_Access_Location(1,1,1);
+        qaLocation4 = new Quick_Access_Location(2,1,1);
+        qaLocation2 = new Quick_Access_Location(3,2,2);
         quick_access_locationDAO.insert(qaLocation1);
         quick_access_locationDAO.insert(qaLocation2);
         quick_access_locationDAO.insert(qaLocation4);
@@ -71,7 +71,7 @@ class Quick_Access_LocationDAOImpTest {
     @Test
     void shouldGetOneQAL(){
         assertEquals(qaLocation1
-                ,quick_access_locationDAO.getQuickAccessLocation(qaLocation1.getID()));
+                ,quick_access_locationDAO.getQuickAccessLocation(1));
     }
 
     @Test
@@ -90,7 +90,7 @@ class Quick_Access_LocationDAOImpTest {
     @Test
     void shouldUpdate(){
         Quick_Access_Location qaLocation3 = new Quick_Access_Location(qaLocation2.getID()
-                ,location2.getId()
+                ,2
                 ,2);
         quick_access_locationDAO.update(qaLocation3);
         assertEquals(qaLocation2.getID(),quick_access_locationDAO.getQuickAccessLocation(qaLocation2.getID()).getID());

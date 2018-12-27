@@ -135,14 +135,12 @@ public class EdgeDAOImp implements EdgeDAO {
     @Override
     public void update(Edge edge) {
         String sql = "UPDATE edges SET [from] = ? , [to] =?,[length]=? WHERE id=?";
-        int row_count = 0;
         try (Connection connection = DatabaseManager.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, edge.getFrom());
             preparedStatement.setInt(2, edge.getTo());
             preparedStatement.setInt(3, edge.getLength());
             preparedStatement.setInt(4, edge.getId());
-            row_count = preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

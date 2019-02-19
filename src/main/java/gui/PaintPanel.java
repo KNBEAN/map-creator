@@ -137,7 +137,7 @@ public class PaintPanel extends JPanel {
         return table;
     }
 
-    private ImageIcon resizeImageIcon(ImageIcon imageIcon, int width, int height) {
+    public static ImageIcon resizeImageIcon(ImageIcon imageIcon, int width, int height) {
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
 
         Graphics2D graphics2D = bufferedImage.createGraphics();
